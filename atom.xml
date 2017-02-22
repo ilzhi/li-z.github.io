@@ -4,9 +4,9 @@
   <subtitle>coder</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="https://li-z.github.io/"/>
+  <link href="http://lizhi.trade/"/>
   <updated>2017-02-21T11:48:56.301Z</updated>
-  <id>https://li-z.github.io/</id>
+  <id>http://lizhi.trade/</id>
   
   <author>
     <name>李智</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>JavaScript中实现继承的各种姿势</title>
-    <link href="https://li-z.github.io/2017/02/21/JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%E7%9A%84%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BF/"/>
-    <id>https://li-z.github.io/2017/02/21/JavaScript中实现继承的各种姿势/</id>
+    <link href="http://lizhi.trade/2017/02/21/JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%E7%9A%84%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BF/"/>
+    <id>http://lizhi.trade/2017/02/21/JavaScript中实现继承的各种姿势/</id>
     <published>2017-02-21T10:57:53.000Z</published>
     <updated>2017-02-21T11:48:56.301Z</updated>
     
@@ -45,14 +45,14 @@
     </summary>
     
     
-      <category term="JavaScript" scheme="https://li-z.github.io/tags/JavaScript/"/>
+      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
     
   </entry>
   
   <entry>
     <title>BFC布局 学习总结</title>
-    <link href="https://li-z.github.io/2017/02/20/BFC%E5%B8%83%E5%B1%80-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
-    <id>https://li-z.github.io/2017/02/20/BFC布局-学习总结/</id>
+    <link href="http://lizhi.trade/2017/02/20/BFC%E5%B8%83%E5%B1%80-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
+    <id>http://lizhi.trade/2017/02/20/BFC布局-学习总结/</id>
     <published>2017-02-20T13:38:49.000Z</published>
     <updated>2017-02-20T14:04:13.369Z</updated>
     
@@ -100,7 +100,7 @@
     </summary>
     
     
-      <category term="布局" scheme="https://li-z.github.io/tags/%E5%B8%83%E5%B1%80/"/>
+      <category term="布局" scheme="http://lizhi.trade/tags/%E5%B8%83%E5%B1%80/"/>
     
   </entry>
   
