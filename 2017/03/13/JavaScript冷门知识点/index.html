@@ -107,43 +107,25 @@
 
 
 
-<meta name="description" content="parseInt 可以接收两个参数 string, radix(基数)
-第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
+<meta name="description" content="parseInt 可以接收两个参数 string, radix(基数)第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
 例:
-
-parseInt(‘1’, 0); =&amp;gt; 1
-parseInt(‘2’, 1); =&amp;gt; NaN
-parseInt(‘3’, 2); =&amp;gt; NaN
-
-
-在JS中,能正确计算且不失精度的最大整数是Math.po">
+123parseInt(&apos;1&apos;, 0); =&amp;gt; 1parseInt(&apos;2&apos;, 1); =&amp;gt; NaNparseInt(&apos;3&apos;, 2); =&amp;gt; NaN
+在JS中,能正确计算且不失精度的最大整数是Math.pow(2">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript冷门知识点">
 <meta property="og:url" content="http://lizhi.trade/2017/03/13/JavaScript冷门知识点/index.html">
 <meta property="og:site_name" content="ilz Blog">
-<meta property="og:description" content="parseInt 可以接收两个参数 string, radix(基数)
-第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
+<meta property="og:description" content="parseInt 可以接收两个参数 string, radix(基数)第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
 例:
-
-parseInt(‘1’, 0); =&amp;gt; 1
-parseInt(‘2’, 1); =&amp;gt; NaN
-parseInt(‘3’, 2); =&amp;gt; NaN
-
-
-在JS中,能正确计算且不失精度的最大整数是Math.po">
-<meta property="og:updated_time" content="2017-03-13T11:33:54.986Z">
+123parseInt(&apos;1&apos;, 0); =&amp;gt; 1parseInt(&apos;2&apos;, 1); =&amp;gt; NaNparseInt(&apos;3&apos;, 2); =&amp;gt; NaN
+在JS中,能正确计算且不失精度的最大整数是Math.pow(2">
+<meta property="og:updated_time" content="2017-03-13T13:09:08.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript冷门知识点">
-<meta name="twitter:description" content="parseInt 可以接收两个参数 string, radix(基数)
-第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
+<meta name="twitter:description" content="parseInt 可以接收两个参数 string, radix(基数)第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。
 例:
-
-parseInt(‘1’, 0); =&amp;gt; 1
-parseInt(‘2’, 1); =&amp;gt; NaN
-parseInt(‘3’, 2); =&amp;gt; NaN
-
-
-在JS中,能正确计算且不失精度的最大整数是Math.po">
+123parseInt(&apos;1&apos;, 0); =&amp;gt; 1parseInt(&apos;2&apos;, 1); =&amp;gt; NaNparseInt(&apos;3&apos;, 2); =&amp;gt; NaN
+在JS中,能正确计算且不失精度的最大整数是Math.pow(2">
 
 
 
@@ -401,46 +383,30 @@ parseInt(‘3’, 2); =&amp;gt; NaN
       
 
       
-        <h3 id="parseInt-可以接收两个参数-string-radix-基数"><a href="#parseInt-可以接收两个参数-string-radix-基数" class="headerlink" title="parseInt 可以接收两个参数 string, radix(基数)"></a>parseInt 可以接收两个参数 string, radix(基数)</h3><blockquote>
-<p>第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。</p>
+        <h3 id="parseInt-可以接收两个参数-string-radix-基数"><a href="#parseInt-可以接收两个参数-string-radix-基数" class="headerlink" title="parseInt 可以接收两个参数 string, radix(基数)"></a>parseInt 可以接收两个参数 string, radix(基数)</h3><p>第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。</p>
 <p>例:</p>
-<ul>
-<li>parseInt(‘1’, 0); =&gt; 1</li>
-<li>parseInt(‘2’, 1); =&gt; NaN</li>
-<li>parseInt(‘3’, 2); =&gt; NaN</li>
-</ul>
-</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">parseInt</span>(<span class="string">'1'</span>, <span class="number">0</span>); =&gt; <span class="number">1</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'2'</span>, <span class="number">1</span>); =&gt; <span class="literal">NaN</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'3'</span>, <span class="number">2</span>); =&gt; <span class="literal">NaN</span></div></pre></td></tr></table></figure>
 <h3 id="在JS中-能正确计算且不失精度的最大整数是Math-pow-2-53-9007199254740992-最大值加一还是最大值"><a href="#在JS中-能正确计算且不失精度的最大整数是Math-pow-2-53-9007199254740992-最大值加一还是最大值" class="headerlink" title="在JS中,能正确计算且不失精度的最大整数是Math.pow(2, 53) == 9007199254740992,最大值加一还是最大值"></a>在JS中,能正确计算且不失精度的最大整数是Math.pow(2, 53) == 9007199254740992,最大值加一还是最大值</h3><p>例,如下循环不会停止<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> END = <span class="built_in">Math</span>.pow(<span class="number">2</span>, <span class="number">53</span>);</div><div class="line"><span class="keyword">var</span> START = END - <span class="number">100</span>;</div><div class="line"><span class="keyword">var</span> count = <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = START; i &lt;= END; i++) &#123;</div><div class="line">    count++;</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(count);</div></pre></td></tr></table></figure></p>
 <h3 id="JS中允许存在有空隙的数组-称之为稀疏数组"><a href="#JS中允许存在有空隙的数组-称之为稀疏数组" class="headerlink" title="JS中允许存在有空隙的数组,称之为稀疏数组"></a>JS中允许存在有空隙的数组,称之为稀疏数组</h3><p>例:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> arr = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>];</div><div class="line">arr[<span class="number">100</span>]=<span class="number">1</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="number">10</span> <span class="keyword">in</span> arr);</div><div class="line"><span class="built_in">console</span>.log(arr.length);</div><div class="line">arr.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">x</span>)</span>&#123;</div><div class="line">  <span class="built_in">console</span>.log(x);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>输出为:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="literal">false</span></div><div class="line"><span class="number">101</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
-<h3 id="Object-prototype-gt-Array-prototype-gt-Function-prototype-gt-function"><a href="#Object-prototype-gt-Array-prototype-gt-Function-prototype-gt-function" class="headerlink" title="Object.prototype =&gt; {},Array.prototype =&gt; [],Function.prototype =&gt; function(){}"></a>Object.prototype =&gt; {},Array.prototype =&gt; [],Function.prototype =&gt; function(){}</h3><h3 id="会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接"><a href="#会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接" class="headerlink" title="- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接."></a>- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接.</h3><blockquote>
-<p>例:</p>
-<p>‘5’ + 3 === ‘53’</p>
-<p>5 + ‘3’ === ‘53’</p>
-<p>5 - ‘3’  === 2</p>
-<p>‘5’ - 3  === 2</p>
-<p>‘5’ - ‘3’ === 2</p>
-</blockquote>
-<h3 id="JS中1-1-1-1-都是合法的数字"><a href="#JS中1-1-1-1-都是合法的数字" class="headerlink" title="JS中1.1, 1., .1 都是合法的数字"></a>JS中1.1, 1., .1 都是合法的数字</h3><blockquote>
-<p>例:</p>
-<p>3.toString() =&gt; error</p>
-<p>3..toString() =&gt; ‘3’</p>
-<p>3…toString() =&gt; error</p>
-</blockquote>
+<h3 id="会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接"><a href="#会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接" class="headerlink" title="- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接."></a>- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接.</h3><p>例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="string">'5'</span> + <span class="number">3</span> === <span class="string">'53'</span></div><div class="line"><span class="number">5</span> + <span class="string">'3'</span> === <span class="string">'53'</span></div><div class="line"><span class="number">5</span> - <span class="string">'3'</span>  === <span class="number">2</span></div><div class="line"><span class="string">'5'</span> - <span class="number">3</span>  === <span class="number">2</span></div><div class="line"><span class="string">'5'</span> - <span class="string">'3'</span> === <span class="number">2</span></div></pre></td></tr></table></figure>
+<h3 id="JS中1-1-1-1-都是合法的数字"><a href="#JS中1-1-1-1-都是合法的数字" class="headerlink" title="JS中1.1, 1., .1 都是合法的数字"></a>JS中1.1, 1., .1 都是合法的数字</h3><p>例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="number">3.</span>toString() =&gt; error</div><div class="line"><span class="number">3.</span>.toString() =&gt; <span class="string">'3'</span></div><div class="line"><span class="number">3.</span>..toString() =&gt; error</div></pre></td></tr></table></figure>
 <h3 id="数组在比较大小的时候按照值的顺序比较"><a href="#数组在比较大小的时候按照值的顺序比较" class="headerlink" title="数组在比较大小的时候按照值的顺序比较"></a>数组在比较大小的时候按照值的顺序比较</h3><p>例:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>],</div><div class="line">    b = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">4</span>],</div><div class="line">    c = [<span class="number">2</span>]</div><div class="line">a &gt; <span class="function"><span class="params">b</span>  =&gt;</span> <span class="literal">false</span></div><div class="line">a &lt; <span class="function"><span class="params">b</span>  =&gt;</span> <span class="literal">true</span></div><div class="line">a &gt; <span class="function"><span class="params">c</span>  =&gt;</span> <span class="literal">false</span></div><div class="line">a &lt; <span class="function"><span class="params">c</span>  =&gt;</span> <span class="literal">true</span></div></pre></td></tr></table></figure>
-<h3 id="function的-length-属性就是函数的参数个数"><a href="#function的-length-属性就是函数的参数个数" class="headerlink" title="function的 length 属性就是函数的参数个数"></a>function的 length 属性就是函数的参数个数</h3><blockquote>
-<p>Function.length =&gt; 1(奇葩)</p>
-<p>new Function().length =&gt; 0</p>
-</blockquote>
-<h3 id="Math-min-VS-Math-max"><a href="#Math-min-VS-Math-max" class="headerlink" title="Math.min VS Math.max"></a>Math.min VS Math.max</h3><blockquote>
-<p>Math.min() =&gt; Infinity<br>Math.max() =&gt; -Infinity<br>由于这两个奇葩结果,故:<br>Math.min() &gt; Math.max() =&gt; true</p>
-</blockquote>
+<h3 id="function的-length-属性就是函数的参数个数"><a href="#function的-length-属性就是函数的参数个数" class="headerlink" title="function的 length 属性就是函数的参数个数"></a>function的 length 属性就是函数的参数个数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Function</span>.length == <span class="number">1</span> <span class="comment">//(奇葩)</span></div><div class="line"><span class="keyword">new</span> <span class="built_in">Function</span>().length == <span class="number">0</span></div></pre></td></tr></table></figure>
+<h3 id="Math-min-VS-Math-max"><a href="#Math-min-VS-Math-max" class="headerlink" title="Math.min VS Math.max"></a>Math.min VS Math.max</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Math</span>.min() == <span class="literal">Infinity</span></div><div class="line"><span class="built_in">Math</span>.max() == -<span class="literal">Infinity</span></div><div class="line"><span class="comment">//由于这两个奇葩结果,故:</span></div><div class="line"><span class="built_in">Math</span>.min() &gt; <span class="built_in">Math</span>.max() == <span class="literal">true</span></div></pre></td></tr></table></figure>
 <h3 id="函数里的参数已经声明了"><a href="#函数里的参数已经声明了" class="headerlink" title="函数里的参数已经声明了"></a>函数里的参数已经声明了</h3><p>例:</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> a;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params">a</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> a = <span class="string">'bye'</span>;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div><div class="line"><span class="comment">//a作为参数其实已经声明了,故第一个函数就等价于</span></div><div class="line"><span class="keyword">var</span> a = <span class="string">'hello'</span>;</div><div class="line"><span class="keyword">var</span> a;</div><div class="line"><span class="comment">//第二个函数就等价于</span></div><div class="line"><span class="keyword">var</span> a = <span class="string">'hello'</span>;</div><div class="line"><span class="keyword">var</span> a = <span class="string">'bye'</span></div><div class="line">[foo(<span class="string">'hello'</span>), bar(<span class="string">'hello'</span>)] =&gt; [<span class="string">'hello'</span>, <span class="string">'bye'</span>]</div></pre></td></tr></table></figure>
-<h3 id="1-lt-2-lt-3-3-lt-2-lt-1"><a href="#1-lt-2-lt-3-3-lt-2-lt-1" class="headerlink" title="[1 &lt; 2 &lt; 3, 3 &lt; 2 &lt; 1]"></a>[1 &lt; 2 &lt; 3, 3 &lt; 2 &lt; 1]</h3><h3 id="更简洁的交换两个值-a-b-b-a-0"><a href="#更简洁的交换两个值-a-b-b-a-0" class="headerlink" title="更简洁的交换两个值:       a= [b, b=a][0];"></a>更简洁的交换两个值:       a= [b, b=a][0];</h3>
+<h3 id="原型对象"><a href="#原型对象" class="headerlink" title="原型对象"></a>原型对象</h3><ul>
+<li>Object.prototype =&gt; {}</li>
+<li>Array.prototype =&gt; []</li>
+<li>Function.prototype =&gt; function(){}</li>
+</ul>
+<h3 id="更简洁的交换两个值-a-b-b-a-0"><a href="#更简洁的交换两个值-a-b-b-a-0" class="headerlink" title="更简洁的交换两个值: a= [b, b=a][0];"></a>更简洁的交换两个值: a= [b, b=a][0];</h3>
       
     </div>
 
@@ -684,7 +650,7 @@ parseInt(‘3’, 2); =&amp;gt; NaN
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#parseInt-可以接收两个参数-string-radix-基数"><span class="nav-number">1.</span> <span class="nav-text">parseInt 可以接收两个参数 string, radix(基数)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在JS中-能正确计算且不失精度的最大整数是Math-pow-2-53-9007199254740992-最大值加一还是最大值"><span class="nav-number">2.</span> <span class="nav-text">在JS中,能正确计算且不失精度的最大整数是Math.pow(2, 53) == 9007199254740992,最大值加一还是最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS中允许存在有空隙的数组-称之为稀疏数组"><span class="nav-number">3.</span> <span class="nav-text">JS中允许存在有空隙的数组,称之为稀疏数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-prototype-gt-Array-prototype-gt-Function-prototype-gt-function"><span class="nav-number">4.</span> <span class="nav-text">Object.prototype => {},Array.prototype => [],Function.prototype => function(){}</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接"><span class="nav-number">5.</span> <span class="nav-text">- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS中1-1-1-1-都是合法的数字"><span class="nav-number">6.</span> <span class="nav-text">JS中1.1, 1., .1 都是合法的数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组在比较大小的时候按照值的顺序比较"><span class="nav-number">7.</span> <span class="nav-text">数组在比较大小的时候按照值的顺序比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function的-length-属性就是函数的参数个数"><span class="nav-number">8.</span> <span class="nav-text">function的 length 属性就是函数的参数个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math-min-VS-Math-max"><span class="nav-number">9.</span> <span class="nav-text">Math.min VS Math.max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数里的参数已经声明了"><span class="nav-number">10.</span> <span class="nav-text">函数里的参数已经声明了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-lt-2-lt-3-3-lt-2-lt-1"><span class="nav-number">11.</span> <span class="nav-text">[1 < 2 < 3, 3 < 2 < 1]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更简洁的交换两个值-a-b-b-a-0"><span class="nav-number">12.</span> <span class="nav-text">更简洁的交换两个值:       a= [b, b=a][0];</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#parseInt-可以接收两个参数-string-radix-基数"><span class="nav-number">1.</span> <span class="nav-text">parseInt 可以接收两个参数 string, radix(基数)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在JS中-能正确计算且不失精度的最大整数是Math-pow-2-53-9007199254740992-最大值加一还是最大值"><span class="nav-number">2.</span> <span class="nav-text">在JS中,能正确计算且不失精度的最大整数是Math.pow(2, 53) == 9007199254740992,最大值加一还是最大值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS中允许存在有空隙的数组-称之为稀疏数组"><span class="nav-number">3.</span> <span class="nav-text">JS中允许存在有空隙的数组,称之为稀疏数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会尽可能的将两个操作数变成数字-而-如果两边不都是数字-那么就是字符串拼接"><span class="nav-number">4.</span> <span class="nav-text">- 会尽可能的将两个操作数变成数字, 而 + 如果两边不都是数字, 那么就是字符串拼接.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JS中1-1-1-1-都是合法的数字"><span class="nav-number">5.</span> <span class="nav-text">JS中1.1, 1., .1 都是合法的数字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数组在比较大小的时候按照值的顺序比较"><span class="nav-number">6.</span> <span class="nav-text">数组在比较大小的时候按照值的顺序比较</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function的-length-属性就是函数的参数个数"><span class="nav-number">7.</span> <span class="nav-text">function的 length 属性就是函数的参数个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Math-min-VS-Math-max"><span class="nav-number">8.</span> <span class="nav-text">Math.min VS Math.max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数里的参数已经声明了"><span class="nav-number">9.</span> <span class="nav-text">函数里的参数已经声明了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型对象"><span class="nav-number">10.</span> <span class="nav-text">原型对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更简洁的交换两个值-a-b-b-a-0"><span class="nav-number">11.</span> <span class="nav-text">更简洁的交换两个值: a= [b, b=a][0];</span></a></li></ol></div>
             
 
           </div>
