@@ -127,7 +127,7 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
 
 
 然后求出">
-<meta property="og:updated_time" content="2017-03-19T11:18:18.871Z">
+<meta property="og:updated_time" content="2017-03-19T11:21:12.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="根据URL编码获取汉字真正的Unicode编码">
 <meta name="twitter:description" content="一般情况下,网址路径的编码，用的是utf-8编码
@@ -404,38 +404,9 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
 </blockquote>
 <ul>
 <li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
-<li><p>每八位分割成一个字节,根据utf-8编码规则取出源码</p>
-<p>   Unicode符号范围 | UTF-8编码方式</p>
-<pre><code>(十六进制) | （二进制）
-</code></pre><p>——————–|————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
-</li>
+<li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>dog</th>
-<th>bird</th>
-<th>cat</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>foo</td>
-<td>foo</td>
-<td>foo</td>
-</tr>
-<tr>
-<td>bar</td>
-<td>bar</td>
-<td>bar</td>
-</tr>
-<tr>
-<td>baz</td>
-<td>baz</td>
-<td>baz</td>
-</tr>
-</tbody>
-</table>
+<p>Unicode符号范围 | UTF-8编码方式<br>(十六进制) | （二进制）<br>——————–|————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
 <ul>
 <li>取出的源码等于汉字的Unicode编码(汉字的Unicode可以通过charCodeAt获取)</li>
 </ul>
