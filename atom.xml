@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lizhi.trade/"/>
-  <updated>2017-03-19T08:54:05.410Z</updated>
+  <updated>2017-03-19T08:56:54.292Z</updated>
   <id>http://lizhi.trade/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>根据URI编码获取汉字真正的Unicode编码</title>
+    <title>根据URL编码获取汉字真正的Unicode编码</title>
     <link href="http://lizhi.trade/2017/03/19/%E6%A0%B9%E6%8D%AEURL%E7%BC%96%E7%A0%81%E8%8E%B7%E5%8F%96%E6%B1%89%E5%AD%97%E7%9C%9F%E6%AD%A3%E7%9A%84Unicode%E7%BC%96%E7%A0%81/"/>
     <id>http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/</id>
     <published>2017-03-19T08:12:41.000Z</published>
-    <updated>2017-03-19T08:54:05.410Z</updated>
+    <updated>2017-03-19T08:56:54.292Z</updated>
     
     <content type="html"><![CDATA[<ul>
 <li>一般情况下,网址路径的编码，用的是utf-8编码</li>
@@ -28,15 +28,17 @@
 </ul>
 <blockquote>
 <p>encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。</p>
+</blockquote>
 <ul>
 <li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
 <li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
 </ul>
-<p>Unicode符号范围 | UTF-8编码方式<br>(十六进制) | （二进制）<br>——————–+———————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+<blockquote>
+<p>   Unicode符号范围 | UTF-8编码方式<br>          (十六进制) | （二进制）<br>——————–+————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+</blockquote>
 <ul>
 <li>取出的源码等于汉字的Unicode编码(汉字的Unicode可以通过charCodeAt获取)</li>
 </ul>
-</blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> me = <span class="string">'我'</span>;</div><div class="line"><span class="keyword">var</span> charCode = me.charCodeAt(<span class="number">0</span>); <span class="comment">//25105</span></div><div class="line"><span class="keyword">var</span> utf = <span class="built_in">encodeURIComponent</span>(<span class="string">'我'</span>).replace(<span class="regexp">/%/g</span>,<span class="string">''</span>); <span class="comment">//E68891</span></div><div class="line"><span class="keyword">var</span> dec = <span class="built_in">parseInt</span>(utf,<span class="number">16</span>); <span class="comment">//15108241</span></div><div class="line"><span class="keyword">var</span> bin = dec.toString(<span class="number">2</span>); <span class="comment">//111001101000100010010001</span></div><div class="line"><span class="comment">//111001101000100010010001 =&gt; 11100110 10001000 10010001</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'0110001000010001'</span>,<span class="number">2</span>) === charCode <span class="comment">//true</span></div></pre></td></tr></table></figure>
 ]]></content>
     

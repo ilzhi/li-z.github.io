@@ -113,9 +113,10 @@
 
 encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。
 
-然后求出这">
+
+然后求出">
 <meta property="og:type" content="article">
-<meta property="og:title" content="根据URI编码获取汉字真正的Unicode编码">
+<meta property="og:title" content="根据URL编码获取汉字真正的Unicode编码">
 <meta property="og:url" content="http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/index.html">
 <meta property="og:site_name" content="ilz Blog">
 <meta property="og:description" content="一般情况下,网址路径的编码，用的是utf-8编码
@@ -124,17 +125,19 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
 
 encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。
 
-然后求出这">
-<meta property="og:updated_time" content="2017-03-19T08:54:05.410Z">
+
+然后求出">
+<meta property="og:updated_time" content="2017-03-19T08:56:54.292Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="根据URI编码获取汉字真正的Unicode编码">
+<meta name="twitter:title" content="根据URL编码获取汉字真正的Unicode编码">
 <meta name="twitter:description" content="一般情况下,网址路径的编码，用的是utf-8编码
 在js中,如果我们想获取一个汉字或者字符的utf-8编码,可以使用encodeURIComponent
 
 
 encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。
 
-然后求出这">
+
+然后求出">
 
 
 
@@ -168,7 +171,7 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
 
 
 
-  <title> 根据URI编码获取汉字真正的Unicode编码 | ilz Blog </title>
+  <title> 根据URL编码获取汉字真正的Unicode编码 | ilz Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -331,7 +334,7 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
             
             
               
-                根据URI编码获取汉字真正的Unicode编码
+                根据URL编码获取汉字真正的Unicode编码
               
             
           </h1>
@@ -398,15 +401,17 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
 </ul>
 <blockquote>
 <p>encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。</p>
+</blockquote>
 <ul>
 <li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
 <li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
 </ul>
-<p>Unicode符号范围 | UTF-8编码方式<br>(十六进制) | （二进制）<br>——————–+———————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+<blockquote>
+<p>   Unicode符号范围 | UTF-8编码方式<br>          (十六进制) | （二进制）<br>——————–+————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+</blockquote>
 <ul>
 <li>取出的源码等于汉字的Unicode编码(汉字的Unicode可以通过charCodeAt获取)</li>
 </ul>
-</blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> me = <span class="string">'我'</span>;</div><div class="line"><span class="keyword">var</span> charCode = me.charCodeAt(<span class="number">0</span>); <span class="comment">//25105</span></div><div class="line"><span class="keyword">var</span> utf = <span class="built_in">encodeURIComponent</span>(<span class="string">'我'</span>).replace(<span class="regexp">/%/g</span>,<span class="string">''</span>); <span class="comment">//E68891</span></div><div class="line"><span class="keyword">var</span> dec = <span class="built_in">parseInt</span>(utf,<span class="number">16</span>); <span class="comment">//15108241</span></div><div class="line"><span class="keyword">var</span> bin = dec.toString(<span class="number">2</span>); <span class="comment">//111001101000100010010001</span></div><div class="line"><span class="comment">//111001101000100010010001 =&gt; 11100110 10001000 10010001</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'0110001000010001'</span>,<span class="number">2</span>) === charCode <span class="comment">//true</span></div></pre></td></tr></table></figure>
 
       
@@ -523,7 +528,7 @@ encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编
   <div class="comments" id="comments">
     
       <div class="ds-thread" data-thread-key="2017/03/19/根据URL编码获取汉字真正的Unicode编码/"
-           data-title="根据URI编码获取汉字真正的Unicode编码" data-url="http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/">
+           data-title="根据URL编码获取汉字真正的Unicode编码" data-url="http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/">
       </div>
     
   </div>
