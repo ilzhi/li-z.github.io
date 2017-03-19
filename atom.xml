@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lizhi.trade/"/>
-  <updated>2017-03-19T11:24:12.861Z</updated>
+  <updated>2017-03-19T11:25:34.748Z</updated>
   <id>http://lizhi.trade/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://lizhi.trade/2017/03/19/%E6%A0%B9%E6%8D%AEURL%E7%BC%96%E7%A0%81%E8%8E%B7%E5%8F%96%E6%B1%89%E5%AD%97%E7%9C%9F%E6%AD%A3%E7%9A%84Unicode%E7%BC%96%E7%A0%81/"/>
     <id>http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/</id>
     <published>2017-03-19T08:12:41.000Z</published>
-    <updated>2017-03-19T11:24:12.861Z</updated>
+    <updated>2017-03-19T11:25:34.748Z</updated>
     
     <content type="html"><![CDATA[<ul>
 <li>一般情况下,网址路径的编码，用的是utf-8编码</li>
@@ -33,29 +33,29 @@
 <li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
 <li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
 </ul>
-<p>Unicode符号范围 | UTF-8编码方式<br>(十六进制) | （二进制）<br>——————–|————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
 <table>
 <thead>
 <tr>
-<th>Unicode符号范围</th>
-<th>UTF-8编码方式 </th>
+<th>Unicode符号范围(十六进制)</th>
+<th>UTF-8编码方式（二进制）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>foo</td>
-<td>foo</td>
-<td>foo</td>
+<td>0000 0000-0000 007F</td>
+<td>0xxxxxxx</td>
 </tr>
 <tr>
-<td>bar</td>
-<td>bar</td>
-<td>bar</td>
+<td>0000 0080-0000 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
 </tr>
 <tr>
-<td>baz</td>
-<td>baz</td>
-<td>baz</td>
+<td>0000 0800-0000 FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0001 0000-0010 FFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
 </tr>
 </tbody>
 </table>
