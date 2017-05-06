@@ -1,0 +1,816 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Lobster Two:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="布局," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="ilz Blog" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/avatar.jpg?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
+在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BFC布局-学习总结">
+<meta property="og:url" content="http://lizhi.trade/2015/05/20/BFC布局-学习总结/index.html">
+<meta property="og:site_name" content="ilz Blog">
+<meta property="og:description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
+在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
+<meta property="og:updated_time" content="2017-05-06T11:01:50.147Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BFC布局-学习总结">
+<meta name="twitter:description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
+在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://lizhi.trade/2015/05/20/BFC布局-学习总结/"/>
+
+
+
+
+
+  <title> BFC布局-学习总结 | ilz Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ilz Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://lizhi.trade/2015/05/20/BFC布局-学习总结/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="李智">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="ilz Blog">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="ilz Blog" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                BFC布局-学习总结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-05-20T21:38:49+08:00">
+                2015-05-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/05/20/BFC布局-学习总结/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/05/20/BFC布局-学习总结/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-w3c规范中的BFC定义："><a href="#一-w3c规范中的BFC定义：" class="headerlink" title="一. w3c规范中的BFC定义："></a>一. w3c规范中的BFC定义：</h2><p>“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。</p>
+<p>在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在一个BFC中，两个相邻的块级盒子的垂直外边距会产生折叠。 在BFC中，每一个盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）。</p>
+<p>也就是说BFC中的元素的布局是不受外界的影响（我们往往利用这个特性来消除浮动元素对其非浮动的兄弟元素和其子元素带来的影响）。并且在一个BFC中，块盒与行盒（行盒由一行中所有的内联元素所组成）都会垂直的沿着其父元素的边框排列。 由这段定义，我们可以得出：</p>
+<h3 id="1-哪些元素会生成BFC："><a href="#1-哪些元素会生成BFC：" class="headerlink" title="1. 哪些元素会生成BFC："></a>1. 哪些元素会生成BFC：</h3><ul>
+<li>根元素(整个页面就是一个大的BFC)；</li>
+<li>float为 left | right；</li>
+<li>overflow为 hidden | auto | scroll；</li>
+<li>display为 inline-block | table-cell | table-caption | flex | inline-flex；</li>
+<li>position为 absolute | fixed；<h3 id="2-BFC的布局规则："><a href="#2-BFC的布局规则：" class="headerlink" title="2. BFC的布局规则："></a>2. BFC的布局规则：</h3></li>
+<li>每一个BFC盒子会在垂直方向一个接一个地排列；</li>
+<li>两个BFC盒子之间的垂直的间隙是由他们的margin 值所决定的。属于同一个BFC的两个相邻盒子的垂直方向的margin会重叠；</li>
+<li>每一个BFC盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）； 4.计算BFC的高度时，浮动元素也参与计算；</li>
+<li>不与外部浮动元素重叠；</li>
+<li>BFC就是页面上的一个隔离的独立容器，容器里面的子元素与容器外部元素不会相互影响；<h2 id="二-BFC的应用实例"><a href="#二-BFC的应用实例" class="headerlink" title="二. BFC的应用实例"></a>二. BFC的应用实例</h2></li>
+</ul>
+<h3 id="1-自适应两栏布局"><a href="#1-自适应两栏布局" class="headerlink" title="1. 自适应两栏布局"></a>1. 自适应两栏布局</h3><h3 id="2-清除内部浮动"><a href="#2-清除内部浮动" class="headerlink" title="2. 清除内部浮动"></a>2. 清除内部浮动</h3><h3 id="3-防止垂直margin重叠"><a href="#3-防止垂直margin重叠" class="headerlink" title="3. 防止垂直margin重叠"></a>3. 防止垂直margin重叠</h3><p>在CSS当中，相邻的两个盒子（可能是兄弟关系也可能是祖先关系）的外边距可以结合成一个单独的外边距。这种合并外边距的方式被称为折叠，并且因而所结合成的外边距称为折叠外边距。</p>
+<p><strong>折叠的结果：</strong></p>
+<ul>
+<li>两个相邻的外边距都是正数时，折叠结果是它们两者之间较大的值；</li>
+<li>两个相邻的外边距都是负数时，折叠结果是两者绝对值的较大值；</li>
+<li>两个外边距一正一负时，折叠结果是两者的相加的和；</li>
+</ul>
+<h3 id="产生折叠的必备条件："><a href="#产生折叠的必备条件：" class="headerlink" title="产生折叠的必备条件："></a>产生折叠的必备条件：</h3><ul>
+<li>margin必须是邻接的，没有padding和border将他们分隔开；</li>
+<li>必须是处于常规文档流（非float和绝对定位）的块级元素，并且处于同一个BFC当中；</li>
+</ul>
+<h3 id="产生折叠的常见情况："><a href="#产生折叠的常见情况：" class="headerlink" title="产生折叠的常见情况："></a>产生折叠的常见情况：</h3><ul>
+<li>元素的margin-top与其第一个常规文档流的子元素的margin-top；</li>
+<li>元素的margin-bottom与其下一个常规文档流的兄弟元素的margin-top；</li>
+<li>height为auto的元素的margin-bottom与其最后一个常规文档流的子元素的margin-bottom；</li>
+<li>高度为0且不包含常规文档流的子元素，并且自身没有建立新的BFC的元素的margin-top和margin-bottom；</li>
+</ul>
+<h3 id="浮动和绝对定位不与任何元素产生-margin-折叠："><a href="#浮动和绝对定位不与任何元素产生-margin-折叠：" class="headerlink" title="浮动和绝对定位不与任何元素产生 margin 折叠："></a>浮动和绝对定位不与任何元素产生 margin 折叠：</h3><p>原因：浮动元素和绝对定位元素不与其他盒子产生外边距折叠是因为元素会脱离当前的文档流，违反了上面所述的两个margin是邻接的条件同时，又因为浮动和绝对定位会使元素为它的内容创建新的BFC，因此该元素和子元素所处的BFC是不相同的，因此也不会产生margin的折叠；</p>
+<p>因此可以通过使元素成为BFC而避免margin折叠。BFC提供了一个独立布局的环境，每个BFC都遵守同一套布局规则。例如，在同一个BFC内，盒子会一个挨着一个的排，相邻盒子的间距是由margin决定且垂直方向的margin会重叠。而float和clear float也只对同一个BFC内的元素有效；</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实以上的几个例子都体现了BFC布局规则第六条： BFC就是页面上的一个隔离的独立容器，容器里面的子元素与容器外部元素不会相互影响。<br>因此， 当BFC外部存在浮动时，外部元素不会影响BFC内部的布局，BFC会通过变窄，而不与浮动有重叠；同样的，当BFC内部有浮动时，为了不影响外部元素的布局，BFC计算高度时会包括浮动的高度和margin值，因此可以避免margin重叠和闭合浮动。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div></div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechat.jpg" alt="李智 WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/images/alipay.jpg" alt="李智 Alipay"/>
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/布局/" rel="tag"># 布局</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/05/15/跨域/" rel="next" title="跨域">
+                <i class="fa fa-chevron-left"></i> 跨域
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/19/根据URL编码获取汉字真正的Unicode编码/" rel="prev" title="根据URL编码获取汉字真正的Unicode编码">
+                根据URL编码获取汉字真正的Unicode编码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" >
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/05/20/BFC布局-学习总结/"
+           data-title="BFC布局-学习总结" data-url="http://lizhi.trade/2015/05/20/BFC布局-学习总结/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="李智" />
+          <p class="site-author-name" itemprop="name">李智</p>
+           
+              <p class="site-description motion-element" itemprop="description">李智的个人博客</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-w3c规范中的BFC定义："><span class="nav-number">1.</span> <span class="nav-text">一. w3c规范中的BFC定义：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-哪些元素会生成BFC："><span class="nav-number">1.1.</span> <span class="nav-text">1. 哪些元素会生成BFC：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-BFC的布局规则："><span class="nav-number">1.2.</span> <span class="nav-text">2. BFC的布局规则：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-BFC的应用实例"><span class="nav-number">2.</span> <span class="nav-text">二. BFC的应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-自适应两栏布局"><span class="nav-number">2.1.</span> <span class="nav-text">1. 自适应两栏布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-清除内部浮动"><span class="nav-number">2.2.</span> <span class="nav-text">2. 清除内部浮动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-防止垂直margin重叠"><span class="nav-number">2.3.</span> <span class="nav-text">3. 防止垂直margin重叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#产生折叠的必备条件："><span class="nav-number">2.4.</span> <span class="nav-text">产生折叠的必备条件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#产生折叠的常见情况："><span class="nav-number">2.5.</span> <span class="nav-text">产生折叠的常见情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动和绝对定位不与任何元素产生-margin-折叠："><span class="nav-number">2.6.</span> <span class="nav-text">浮动和绝对定位不与任何元素产生 margin 折叠：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">李智</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ilz"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

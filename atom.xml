@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lizhi.trade/"/>
-  <updated>2017-05-06T10:45:49.962Z</updated>
+  <updated>2017-05-06T11:03:51.166Z</updated>
   <id>http://lizhi.trade/</id>
   
   <author>
@@ -16,203 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>跨域</title>
-    <link href="http://lizhi.trade/2017/04/02/%E8%B7%A8%E5%9F%9F/"/>
-    <id>http://lizhi.trade/2017/04/02/跨域/</id>
-    <published>2017-04-02T12:23:11.000Z</published>
-    <updated>2017-05-06T10:45:49.962Z</updated>
-    
-    <content type="html"><![CDATA[<h5 id="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"><a href="#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。" class="headerlink" title="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"></a>概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。</h5><blockquote>
-<p>出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。</p>
-</blockquote>
-<h4 id="跨域大概分为两种："><a href="#跨域大概分为两种：" class="headerlink" title="跨域大概分为两种："></a>跨域大概分为两种：</h4><ul>
-<li>第一种是xhr不能访问不同源的文档</li>
-<li>第二种是不同window之间不能进行交互操作</li>
-</ul>
-<h4 id="跨域通信的方法大致可以分为两类"><a href="#跨域通信的方法大致可以分为两类" class="headerlink" title="跨域通信的方法大致可以分为两类"></a>跨域通信的方法大致可以分为两类</h4><ul>
-<li>第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。</li>
-<li>第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。</li>
-</ul>
-<a id="more"></a>
-<p><strong>一.设置 document.domain</strong></p>
-<blockquote>
-<p>document.domain:获取/设置当前文档的原始域部分, 用于 同源策略.</p>
-<p>在根域范围内，Mozilla允许你把domain属性的值设置为它的<strong>上一级域</strong>。例如，在 developer.mozilla.org 域内，可以把domain设置为 “mozilla.org” 但不能设置为 “mozilla.com” 或者”org”。</p>
-</blockquote>
-<ul>
-<li>原理：相同主域名不同子域名下的页面可以设置document.domain利用他的特性让他们同域</li>
-<li>限制：<ul>
-<li>同于document提供的是页面之间的相互操作，所以需要载入iframe页面；</li>
-<li>只适用于父子window之间的通信，不能用于xhr；</li>
-<li>只能在主域相同且子域不同的情况下使用。</li>
-</ul>
-</li>
-</ul>
-<p>举个栗子：在<a href="http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain" target="_blank" rel="external">http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain</a> = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div><div class="line"><span class="keyword">var</span> ifr = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</div><div class="line">ifr.src = <span class="string">'http://script.a.com/b.html'</span>;</div><div class="line">ifr.style.display = <span class="string">'none'</span>;</div><div class="line"><span class="built_in">document</span>.body.appendChild(ifr);</div><div class="line">ifr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> doc = ifr.contentDocument || ifr.contentWindow.document;</div><div class="line">    <span class="comment">// 在这里操纵b.html</span></div><div class="line">    alert(doc.getElementsByTagName(<span class="string">"h1"</span>)[<span class="number">0</span>].childNodes[<span class="number">0</span>].nodeValue);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>script.a.com上的b.html：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div></pre></td></tr></table></figure>
-<p><strong>二：有src的标签</strong></p>
-<ul>
-<li>原理：所有具有src属性的html标签都是可以跨域的，比如img和script</li>
-<li><p>限制：需要创建一个DOM对象，而且只能用于get方法</p>
-<p>  <strong>代表：JSONP</strong></p>
-</li>
-<li><p>浏览器对XHR做了同源策略，但并没有将这种方式延续到script上（其实还有iframe，img等），从而可以利用动态script标签技术来做到跨域请求的作用</p>
-</li>
-<li><p>JSONP由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数，而数据就是传入回调函数中的JSON数据。</p>
-<ul>
-<li>缺点：只能通过GET方式请求，一方面是参数长度有限制，二是安全性比较差；</li>
-<li>需要服务器端的页面进行相应的配合的。</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script type="text/javascript"&gt;</div><div class="line">    function dosomething(jsondata)&#123;</div><div class="line">        //处理获得的json数据</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src="http://example.com/data.php?callback=dosomething"&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
-<p>js文件载入成功后会执行我们在url参数中指定的函数，并且会把我们需要的json数据作为参数传入。所以jsonp是需要服务器端的页面进行相应的配合的。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];<span class="comment">//得到回调函数名</span></div><div class="line">$data = <span class="keyword">array</span>(<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>);<span class="comment">//要返回的数据</span></div><div class="line"><span class="keyword">echo</span> $callback.<span class="string">'('</span>.json_encode($data).<span class="string">')'</span>;<span class="comment">//输出</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
-<p> <strong>三：window.name</strong></p>
-<blockquote>
-<p>window对象有个name属性，该属性有个特征：即在一个窗口(window)的生命周期内,窗口载入的所有的页面都是共享一个window.name的，每个页面对window.name都有读写的权限，window.name是持久存在一个窗口载入过的所有页面中的，并不会因新页面的载入而进行重置</p>
-</blockquote>
-<ul>
-<li>优点：<ul>
-<li>利用了浏览器的特性来做到不同域之间的数据传递</li>
-<li>不需要前后端配合</li>
-</ul>
-</li>
-<li>限制：<ul>
-<li>安全性不高，当前页面的所有window都可以修改</li>
-<li>不同浏览器对于window.name的大小有限制</li>
-<li>传递数据只能传递字符串</li>
-</ul>
-</li>
-</ul>
-<p><strong>四：navigation对象</strong></p>
-<ul>
-<li>原理：iframe之间是共享navigator对象的，用它来传递信息</li>
-<li>限制：只限于ie6/7</li>
-</ul>
-<p><strong>五：跨域资源共享（CORS）</strong></p>
-<ul>
-<li>原理：<ul>
-<li>cors是一种通过设置前后端http header配置Access-Control-Allow-Origin来进行跨域的一种方式</li>
-</ul>
-</li>
-<li>限制：<ul>
-<li>浏览器需要支持HTML5，可以支持POST，PUT等方法</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p> HTML5标准中提出的跨域资源共享（Cross Origin Resource Share，CORS）才是正道。 它支持其他的HTTP方法如PUT, POST等，可以从本质上解决跨域问题<br>比如我们要从<a href="http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段" target="_blank" rel="external">http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段</a></p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Access-Control-Allow-Origin: *              # 允许所有域名访问，或者</div><div class="line">Access-Control-Allow-Origin: http://a.com   # 只允许特定域名访问</div></pre></td></tr></table></figure>
-<p><strong>六：window.postMessage</strong></p>
-<ul>
-<li>原理：<ul>
-<li>HTML5允许窗口之间发送消息</li>
-</ul>
-</li>
-<li>限制：<ul>
-<li>浏览器需要支持HTML5，获取窗口句柄后才能相互通信</li>
-</ul>
-</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// URL: http://a.com/foo</span></div><div class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'http://b.com/bar'</span>);</div><div class="line">win.postMessage(<span class="string">'Hello, bar!'</span>, <span class="string">'http://b.com'</span>); </div><div class="line"></div><div class="line"><span class="comment">// URL: http://b.com/bar</span></div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(event.data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h5 id=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;a href=&quot;#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot; class=&quot;headerlink&quot; title=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;/a&gt;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&lt;/h5&gt;&lt;blockquote&gt;
-&lt;p&gt;出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h4 id=&quot;跨域大概分为两种：&quot;&gt;&lt;a href=&quot;#跨域大概分为两种：&quot; class=&quot;headerlink&quot; title=&quot;跨域大概分为两种：&quot;&gt;&lt;/a&gt;跨域大概分为两种：&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;第一种是xhr不能访问不同源的文档&lt;/li&gt;
-&lt;li&gt;第二种是不同window之间不能进行交互操作&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4 id=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;a href=&quot;#跨域通信的方法大致可以分为两类&quot; class=&quot;headerlink&quot; title=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;/a&gt;跨域通信的方法大致可以分为两类&lt;/h4&gt;&lt;ul&gt;
-&lt;li&gt;第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。&lt;/li&gt;
-&lt;li&gt;第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。&lt;/li&gt;
-&lt;/ul&gt;
-    
-    </summary>
-    
-    
-      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>根据URL编码获取汉字真正的Unicode编码</title>
-    <link href="http://lizhi.trade/2017/03/19/%E6%A0%B9%E6%8D%AEURL%E7%BC%96%E7%A0%81%E8%8E%B7%E5%8F%96%E6%B1%89%E5%AD%97%E7%9C%9F%E6%AD%A3%E7%9A%84Unicode%E7%BC%96%E7%A0%81/"/>
-    <id>http://lizhi.trade/2017/03/19/根据URL编码获取汉字真正的Unicode编码/</id>
-    <published>2017-03-19T08:12:41.000Z</published>
-    <updated>2017-03-19T11:25:34.748Z</updated>
-    
-    <content type="html"><![CDATA[<ul>
-<li>一般情况下,网址路径的编码，用的是utf-8编码</li>
-<li>在js中,如果我们想获取一个汉字或者字符的utf-8编码,可以使用encodeURIComponent</li>
-</ul>
-<blockquote>
-<p>encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。</p>
-</blockquote>
-<ul>
-<li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
-<li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>Unicode符号范围(十六进制)</th>
-<th>UTF-8编码方式（二进制）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0000 0000-0000 007F</td>
-<td>0xxxxxxx</td>
-</tr>
-<tr>
-<td>0000 0080-0000 07FF</td>
-<td>110xxxxx 10xxxxxx</td>
-</tr>
-<tr>
-<td>0000 0800-0000 FFFF</td>
-<td>1110xxxx 10xxxxxx 10xxxxxx</td>
-</tr>
-<tr>
-<td>0001 0000-0010 FFFF</td>
-<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>取出的源码等于汉字的Unicode编码(汉字的Unicode可以通过charCodeAt获取)</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> me = <span class="string">'我'</span>;</div><div class="line"><span class="keyword">var</span> charCode = me.charCodeAt(<span class="number">0</span>); <span class="comment">//25105</span></div><div class="line"><span class="keyword">var</span> utf = <span class="built_in">encodeURIComponent</span>(<span class="string">'我'</span>).replace(<span class="regexp">/%/g</span>,<span class="string">''</span>); <span class="comment">//E68891</span></div><div class="line"><span class="keyword">var</span> dec = <span class="built_in">parseInt</span>(utf,<span class="number">16</span>); <span class="comment">//15108241</span></div><div class="line"><span class="keyword">var</span> bin = dec.toString(<span class="number">2</span>); <span class="comment">//111001101000100010010001</span></div><div class="line"><span class="comment">//111001101000100010010001 =&gt; 11100110 10001000 10010001</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'0110001000010001'</span>,<span class="number">2</span>) === charCode <span class="comment">//true</span></div></pre></td></tr></table></figure>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;ul&gt;
-&lt;li&gt;一般情况下,网址路径的编码，用的是utf-8编码&lt;/li&gt;
-&lt;li&gt;在js中,如果我们想获取一个汉字或者字符的utf-8编码,可以使用encodeURIComponent&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;encodeURIComponent
-    
-    </summary>
-    
-    
-      <category term="网络" scheme="http://lizhi.trade/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-  </entry>
-  
-  <entry>
     <title>JavaScript冷门知识点</title>
-    <link href="http://lizhi.trade/2017/03/13/JavaScript%E5%86%B7%E9%97%A8%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
-    <id>http://lizhi.trade/2017/03/13/JavaScript冷门知识点/</id>
-    <published>2017-03-13T07:05:38.000Z</published>
-    <updated>2017-03-14T03:22:38.385Z</updated>
+    <link href="http://lizhi.trade/2016/03/13/JavaScript%E5%86%B7%E9%97%A8%E7%9F%A5%E8%AF%86%E7%82%B9/"/>
+    <id>http://lizhi.trade/2016/03/13/JavaScript冷门知识点/</id>
+    <published>2016-03-13T13:05:38.000Z</published>
+    <updated>2017-05-06T11:03:51.166Z</updated>
     
     <content type="html"><![CDATA[<h3 id="parseInt-可以接收两个参数-string-radix-基数"><a href="#parseInt-可以接收两个参数-string-radix-基数" class="headerlink" title="parseInt 可以接收两个参数 string, radix(基数)"></a>parseInt 可以接收两个参数 string, radix(基数)</h3><p>第二个参数表示以几进制来表示第一个参数值,该值介于 2 ~ 36 之间。如果是0,则忽略此值。</p>
 <p>例:</p>
@@ -251,11 +59,41 @@
   </entry>
   
   <entry>
+    <title>HTTP</title>
+    <link href="http://lizhi.trade/2015/09/01/HTTP/"/>
+    <id>http://lizhi.trade/2015/09/01/HTTP/</id>
+    <published>2015-09-01T14:39:47.000Z</published>
+    <updated>2017-05-06T11:03:37.995Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="HTTP协议简介"><a href="#HTTP协议简介" class="headerlink" title="HTTP协议简介"></a>HTTP协议简介</h2><p>当我们在浏览器地址栏输入lizhi.trade/index.html时,浏览器会先查找和lizhi.trade相关联的服务器地址,然后尝试连接80端口建立TCP连接,其中80端口是HTTP的默认通信端口.如果服务器接收了该请求,浏览器就会默认发送如下内容.</p>
+<blockquote>
+<p>GET /index.html HTTP/1.1<br>Host: lizhi.trade<br>User-Agent: Your brower’s name</p>
+</blockquote>
+<p>然后服务器后返回如下响应</p>
+<blockquote>
+<p>HTTP/1.1 200 OK<br>Content-Length: 85214<br>Content-Type: text/html<br>Last-Modified: Web, 08 Apr2088 10:10:10 GMT</p>
+<p>&lt;!document html&gt;<br>…..</p>
+</blockquote>
+<p>浏览器会去除响应行的空行,并将剩下部分作为HTML文档展示</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;HTTP协议简介&quot;&gt;&lt;a href=&quot;#HTTP协议简介&quot; class=&quot;headerlink&quot; title=&quot;HTTP协议简介&quot;&gt;&lt;/a&gt;HTTP协议简介&lt;/h2&gt;&lt;p&gt;当我们在浏览器地址栏输入lizhi.trade/index.html时,浏览器会先查找和li
+    
+    </summary>
+    
+    
+      <category term="网络" scheme="http://lizhi.trade/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>闭包</title>
-    <link href="http://lizhi.trade/2017/03/12/%E9%97%AD%E5%8C%85/"/>
-    <id>http://lizhi.trade/2017/03/12/闭包/</id>
-    <published>2017-03-12T07:46:37.000Z</published>
-    <updated>2017-05-06T10:45:42.091Z</updated>
+    <link href="http://lizhi.trade/2015/08/12/%E9%97%AD%E5%8C%85/"/>
+    <id>http://lizhi.trade/2015/08/12/闭包/</id>
+    <published>2015-08-12T13:46:37.000Z</published>
+    <updated>2017-05-06T11:03:28.575Z</updated>
     
     <content type="html"><![CDATA[<p><strong>闭包的形成与变量的作用域以及变量的生存周期密切相关。下面我们先简单了解这两个知识点</strong></p>
 <h3 id="一：变量的作用域"><a href="#一：变量的作用域" class="headerlink" title="一：变量的作用域"></a>一：变量的作用域</h3><p> 变量的作用域，就是指变量的有效范围。我们最常谈到的是在函数中声明的变量作用域。</p>
@@ -404,10 +242,10 @@
   
   <entry>
     <title>this</title>
-    <link href="http://lizhi.trade/2017/03/02/this/"/>
-    <id>http://lizhi.trade/2017/03/02/this/</id>
-    <published>2017-03-02T12:57:53.000Z</published>
-    <updated>2017-05-06T10:45:41.066Z</updated>
+    <link href="http://lizhi.trade/2015/08/02/this/"/>
+    <id>http://lizhi.trade/2015/08/02/this/</id>
+    <published>2015-08-02T13:57:53.000Z</published>
+    <updated>2017-05-06T11:05:02.466Z</updated>
     
     <content type="html"><![CDATA[<p><strong>this是Javascript语言的一个关键字</strong></p>
 <h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><h3 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h3><h3 id="在绝大多数情况下，函数的调用方式决定了this的值。"><a href="#在绝大多数情况下，函数的调用方式决定了this的值。" class="headerlink" title="在绝大多数情况下，函数的调用方式决定了this的值。"></a>在绝大多数情况下，函数的调用方式决定了this的值。</h3><h3 id="this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同"><a href="#this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同" class="headerlink" title="this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同"></a>this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同</h3><a id="more"></a>
@@ -502,41 +340,11 @@
   </entry>
   
   <entry>
-    <title>HTTP</title>
-    <link href="http://lizhi.trade/2017/03/01/HTTP/"/>
-    <id>http://lizhi.trade/2017/03/01/HTTP/</id>
-    <published>2017-03-01T06:39:47.000Z</published>
-    <updated>2017-03-01T07:25:39.714Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="HTTP协议简介"><a href="#HTTP协议简介" class="headerlink" title="HTTP协议简介"></a>HTTP协议简介</h2><p>当我们在浏览器地址栏输入lizhi.trade/index.html时,浏览器会先查找和lizhi.trade相关联的服务器地址,然后尝试连接80端口建立TCP连接,其中80端口是HTTP的默认通信端口.如果服务器接收了该请求,浏览器就会默认发送如下内容.</p>
-<blockquote>
-<p>GET /index.html HTTP/1.1<br>Host: lizhi.trade<br>User-Agent: Your brower’s name</p>
-</blockquote>
-<p>然后服务器后返回如下响应</p>
-<blockquote>
-<p>HTTP/1.1 200 OK<br>Content-Length: 85214<br>Content-Type: text/html<br>Last-Modified: Web, 08 Apr2088 10:10:10 GMT</p>
-<p>&lt;!document html&gt;<br>…..</p>
-</blockquote>
-<p>浏览器会去除响应行的空行,并将剩下部分作为HTML文档展示</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;HTTP协议简介&quot;&gt;&lt;a href=&quot;#HTTP协议简介&quot; class=&quot;headerlink&quot; title=&quot;HTTP协议简介&quot;&gt;&lt;/a&gt;HTTP协议简介&lt;/h2&gt;&lt;p&gt;当我们在浏览器地址栏输入lizhi.trade/index.html时,浏览器会先查找和li
-    
-    </summary>
-    
-    
-      <category term="网络" scheme="http://lizhi.trade/tags/%E7%BD%91%E7%BB%9C/"/>
-    
-  </entry>
-  
-  <entry>
     <title>JavaScript中实现继承的各种姿势</title>
-    <link href="http://lizhi.trade/2017/02/21/JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%E7%9A%84%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BF/"/>
-    <id>http://lizhi.trade/2017/02/21/JavaScript中实现继承的各种姿势/</id>
-    <published>2017-02-21T10:57:53.000Z</published>
-    <updated>2017-05-06T10:47:33.288Z</updated>
+    <link href="http://lizhi.trade/2015/07/01/JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%E7%9A%84%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BF/"/>
+    <id>http://lizhi.trade/2015/07/01/JavaScript中实现继承的各种姿势/</id>
+    <published>2015-07-01T14:57:53.000Z</published>
+    <updated>2017-05-06T11:04:51.730Z</updated>
     
     <content type="html"><![CDATA[<p>JavaScript 的继承是实现继承,而没有 Java 中的接口继承.这是因为JavaScript 中函数没有签名,而实现继承依靠的是原型链来实现的.</p>
 <h2 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h2><blockquote>
@@ -609,11 +417,77 @@
   </entry>
   
   <entry>
+    <title>根据URL编码获取汉字真正的Unicode编码</title>
+    <link href="http://lizhi.trade/2015/06/19/%E6%A0%B9%E6%8D%AEURL%E7%BC%96%E7%A0%81%E8%8E%B7%E5%8F%96%E6%B1%89%E5%AD%97%E7%9C%9F%E6%AD%A3%E7%9A%84Unicode%E7%BC%96%E7%A0%81/"/>
+    <id>http://lizhi.trade/2015/06/19/根据URL编码获取汉字真正的Unicode编码/</id>
+    <published>2015-06-19T15:12:41.000Z</published>
+    <updated>2017-05-06T11:04:12.329Z</updated>
+    
+    <content type="html"><![CDATA[<ul>
+<li>一般情况下,网址路径的编码，用的是utf-8编码</li>
+<li>在js中,如果我们想获取一个汉字或者字符的utf-8编码,可以使用encodeURIComponent</li>
+</ul>
+<blockquote>
+<p>encodeURIComponent()是对统一资源标识符（URI）的组成部分进行编码的方法。它使用一到四个转义序列来表示字符串中的每个字符的UTF-8编码（只有由两个Unicode代理区字符组成的字符才用四个转义字符编码）。</p>
+</blockquote>
+<ul>
+<li>然后求出这个编码的十进制表示,进而求出二进制表示</li>
+<li>每八位分割成一个字节,根据utf-8编码规则取出源码</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Unicode符号范围(十六进制)</th>
+<th>UTF-8编码方式（二进制）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0000 0000-0000 007F</td>
+<td>0xxxxxxx</td>
+</tr>
+<tr>
+<td>0000 0080-0000 07FF</td>
+<td>110xxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0000 0800-0000 FFFF</td>
+<td>1110xxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+<tr>
+<td>0001 0000-0010 FFFF</td>
+<td>11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>取出的源码等于汉字的Unicode编码(汉字的Unicode可以通过charCodeAt获取)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> me = <span class="string">'我'</span>;</div><div class="line"><span class="keyword">var</span> charCode = me.charCodeAt(<span class="number">0</span>); <span class="comment">//25105</span></div><div class="line"><span class="keyword">var</span> utf = <span class="built_in">encodeURIComponent</span>(<span class="string">'我'</span>).replace(<span class="regexp">/%/g</span>,<span class="string">''</span>); <span class="comment">//E68891</span></div><div class="line"><span class="keyword">var</span> dec = <span class="built_in">parseInt</span>(utf,<span class="number">16</span>); <span class="comment">//15108241</span></div><div class="line"><span class="keyword">var</span> bin = dec.toString(<span class="number">2</span>); <span class="comment">//111001101000100010010001</span></div><div class="line"><span class="comment">//111001101000100010010001 =&gt; 11100110 10001000 10010001</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'0110001000010001'</span>,<span class="number">2</span>) === charCode <span class="comment">//true</span></div></pre></td></tr></table></figure>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;ul&gt;
+&lt;li&gt;一般情况下,网址路径的编码，用的是utf-8编码&lt;/li&gt;
+&lt;li&gt;在js中,如果我们想获取一个汉字或者字符的utf-8编码,可以使用encodeURIComponent&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;encodeURIComponent
+    
+    </summary>
+    
+    
+      <category term="网络" scheme="http://lizhi.trade/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>BFC布局-学习总结</title>
-    <link href="http://lizhi.trade/2017/02/20/BFC%E5%B8%83%E5%B1%80-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
-    <id>http://lizhi.trade/2017/02/20/BFC布局-学习总结/</id>
-    <published>2017-02-20T13:38:49.000Z</published>
-    <updated>2017-05-06T10:47:13.274Z</updated>
+    <link href="http://lizhi.trade/2015/05/20/BFC%E5%B8%83%E5%B1%80-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
+    <id>http://lizhi.trade/2015/05/20/BFC布局-学习总结/</id>
+    <published>2015-05-20T13:38:49.000Z</published>
+    <updated>2017-05-06T11:01:50.147Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一-w3c规范中的BFC定义："><a href="#一-w3c规范中的BFC定义：" class="headerlink" title="一. w3c规范中的BFC定义："></a>一. w3c规范中的BFC定义：</h2><p>“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。</p>
 <p>在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在一个BFC中，两个相邻的块级盒子的垂直外边距会产生折叠。 在BFC中，每一个盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）。</p>
@@ -660,6 +534,132 @@
     
     
       <category term="布局" scheme="http://lizhi.trade/tags/%E5%B8%83%E5%B1%80/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>跨域</title>
+    <link href="http://lizhi.trade/2015/05/15/%E8%B7%A8%E5%9F%9F/"/>
+    <id>http://lizhi.trade/2015/05/15/跨域/</id>
+    <published>2015-05-15T14:23:11.000Z</published>
+    <updated>2017-05-06T11:04:34.776Z</updated>
+    
+    <content type="html"><![CDATA[<h5 id="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"><a href="#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。" class="headerlink" title="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"></a>概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。</h5><blockquote>
+<p>出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。</p>
+</blockquote>
+<h4 id="跨域大概分为两种："><a href="#跨域大概分为两种：" class="headerlink" title="跨域大概分为两种："></a>跨域大概分为两种：</h4><ul>
+<li>第一种是xhr不能访问不同源的文档</li>
+<li>第二种是不同window之间不能进行交互操作</li>
+</ul>
+<h4 id="跨域通信的方法大致可以分为两类"><a href="#跨域通信的方法大致可以分为两类" class="headerlink" title="跨域通信的方法大致可以分为两类"></a>跨域通信的方法大致可以分为两类</h4><ul>
+<li>第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。</li>
+<li>第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。</li>
+</ul>
+<a id="more"></a>
+<p><strong>一.设置 document.domain</strong></p>
+<blockquote>
+<p>document.domain:获取/设置当前文档的原始域部分, 用于 同源策略.</p>
+<p>在根域范围内，Mozilla允许你把domain属性的值设置为它的<strong>上一级域</strong>。例如，在 developer.mozilla.org 域内，可以把domain设置为 “mozilla.org” 但不能设置为 “mozilla.com” 或者”org”。</p>
+</blockquote>
+<ul>
+<li>原理：相同主域名不同子域名下的页面可以设置document.domain利用他的特性让他们同域</li>
+<li>限制：<ul>
+<li>同于document提供的是页面之间的相互操作，所以需要载入iframe页面；</li>
+<li>只适用于父子window之间的通信，不能用于xhr；</li>
+<li>只能在主域相同且子域不同的情况下使用。</li>
+</ul>
+</li>
+</ul>
+<p>举个栗子：在<a href="http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain" target="_blank" rel="external">http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain</a> = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div><div class="line"><span class="keyword">var</span> ifr = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</div><div class="line">ifr.src = <span class="string">'http://script.a.com/b.html'</span>;</div><div class="line">ifr.style.display = <span class="string">'none'</span>;</div><div class="line"><span class="built_in">document</span>.body.appendChild(ifr);</div><div class="line">ifr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> doc = ifr.contentDocument || ifr.contentWindow.document;</div><div class="line">    <span class="comment">// 在这里操纵b.html</span></div><div class="line">    alert(doc.getElementsByTagName(<span class="string">"h1"</span>)[<span class="number">0</span>].childNodes[<span class="number">0</span>].nodeValue);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>script.a.com上的b.html：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div></pre></td></tr></table></figure>
+<p><strong>二：有src的标签</strong></p>
+<ul>
+<li>原理：所有具有src属性的html标签都是可以跨域的，比如img和script</li>
+<li><p>限制：需要创建一个DOM对象，而且只能用于get方法</p>
+<p>  <strong>代表：JSONP</strong></p>
+</li>
+<li><p>浏览器对XHR做了同源策略，但并没有将这种方式延续到script上（其实还有iframe，img等），从而可以利用动态script标签技术来做到跨域请求的作用</p>
+</li>
+<li><p>JSONP由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数，而数据就是传入回调函数中的JSON数据。</p>
+<ul>
+<li>缺点：只能通过GET方式请求，一方面是参数长度有限制，二是安全性比较差；</li>
+<li>需要服务器端的页面进行相应的配合的。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script type="text/javascript"&gt;</div><div class="line">    function dosomething(jsondata)&#123;</div><div class="line">        //处理获得的json数据</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src="http://example.com/data.php?callback=dosomething"&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>js文件载入成功后会执行我们在url参数中指定的函数，并且会把我们需要的json数据作为参数传入。所以jsonp是需要服务器端的页面进行相应的配合的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];<span class="comment">//得到回调函数名</span></div><div class="line">$data = <span class="keyword">array</span>(<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>);<span class="comment">//要返回的数据</span></div><div class="line"><span class="keyword">echo</span> $callback.<span class="string">'('</span>.json_encode($data).<span class="string">')'</span>;<span class="comment">//输出</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p> <strong>三：window.name</strong></p>
+<blockquote>
+<p>window对象有个name属性，该属性有个特征：即在一个窗口(window)的生命周期内,窗口载入的所有的页面都是共享一个window.name的，每个页面对window.name都有读写的权限，window.name是持久存在一个窗口载入过的所有页面中的，并不会因新页面的载入而进行重置</p>
+</blockquote>
+<ul>
+<li>优点：<ul>
+<li>利用了浏览器的特性来做到不同域之间的数据传递</li>
+<li>不需要前后端配合</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>安全性不高，当前页面的所有window都可以修改</li>
+<li>不同浏览器对于window.name的大小有限制</li>
+<li>传递数据只能传递字符串</li>
+</ul>
+</li>
+</ul>
+<p><strong>四：navigation对象</strong></p>
+<ul>
+<li>原理：iframe之间是共享navigator对象的，用它来传递信息</li>
+<li>限制：只限于ie6/7</li>
+</ul>
+<p><strong>五：跨域资源共享（CORS）</strong></p>
+<ul>
+<li>原理：<ul>
+<li>cors是一种通过设置前后端http header配置Access-Control-Allow-Origin来进行跨域的一种方式</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，可以支持POST，PUT等方法</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p> HTML5标准中提出的跨域资源共享（Cross Origin Resource Share，CORS）才是正道。 它支持其他的HTTP方法如PUT, POST等，可以从本质上解决跨域问题<br>比如我们要从<a href="http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段" target="_blank" rel="external">http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段</a></p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Access-Control-Allow-Origin: *              # 允许所有域名访问，或者</div><div class="line">Access-Control-Allow-Origin: http://a.com   # 只允许特定域名访问</div></pre></td></tr></table></figure>
+<p><strong>六：window.postMessage</strong></p>
+<ul>
+<li>原理：<ul>
+<li>HTML5允许窗口之间发送消息</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，获取窗口句柄后才能相互通信</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// URL: http://a.com/foo</span></div><div class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'http://b.com/bar'</span>);</div><div class="line">win.postMessage(<span class="string">'Hello, bar!'</span>, <span class="string">'http://b.com'</span>); </div><div class="line"></div><div class="line"><span class="comment">// URL: http://b.com/bar</span></div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(event.data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h5 id=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;a href=&quot;#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot; class=&quot;headerlink&quot; title=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;/a&gt;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&lt;/h5&gt;&lt;blockquote&gt;
+&lt;p&gt;出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;跨域大概分为两种：&quot;&gt;&lt;a href=&quot;#跨域大概分为两种：&quot; class=&quot;headerlink&quot; title=&quot;跨域大概分为两种：&quot;&gt;&lt;/a&gt;跨域大概分为两种：&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;第一种是xhr不能访问不同源的文档&lt;/li&gt;
+&lt;li&gt;第二种是不同window之间不能进行交互操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;a href=&quot;#跨域通信的方法大致可以分为两类&quot; class=&quot;headerlink&quot; title=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;/a&gt;跨域通信的方法大致可以分为两类&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。&lt;/li&gt;
+&lt;li&gt;第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
     
   </entry>
   
