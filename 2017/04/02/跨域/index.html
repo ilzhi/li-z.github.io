@@ -89,7 +89,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="布局," />
+  <meta name="keywords" content="JavaScript," />
 
 
 
@@ -107,19 +107,40 @@
 
 
 
-<meta name="description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
-在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
+<meta name="description" content="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。
+出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。
+
+跨域大概分为两种：
+第一种是xhr不能访问不同源的文档
+第二种是不同window之间不能进行交互操作
+
+跨域通信的方法大致可以分为两类
+第一种是Hack，例如通过title，navigation">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BFC布局-学习总结">
-<meta property="og:url" content="http://lizhi.trade/2017/02/20/BFC布局-学习总结/index.html">
+<meta property="og:title" content="跨域">
+<meta property="og:url" content="http://lizhi.trade/2017/04/02/跨域/index.html">
 <meta property="og:site_name" content="ilz Blog">
-<meta property="og:description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
-在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
-<meta property="og:updated_time" content="2017-05-06T10:47:13.274Z">
+<meta property="og:description" content="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。
+出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。
+
+跨域大概分为两种：
+第一种是xhr不能访问不同源的文档
+第二种是不同window之间不能进行交互操作
+
+跨域通信的方法大致可以分为两类
+第一种是Hack，例如通过title，navigation">
+<meta property="og:updated_time" content="2017-05-06T10:45:49.962Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="BFC布局-学习总结">
-<meta name="twitter:description" content="一. w3c规范中的BFC定义：“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。
-在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在">
+<meta name="twitter:title" content="跨域">
+<meta name="twitter:description" content="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。
+出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。
+
+跨域大概分为两种：
+第一种是xhr不能访问不同源的文档
+第二种是不同window之间不能进行交互操作
+
+跨域通信的方法大致可以分为两类
+第一种是Hack，例如通过title，navigation">
 
 
 
@@ -147,13 +168,13 @@
 
 
 
-  <link rel="canonical" href="http://lizhi.trade/2017/02/20/BFC布局-学习总结/"/>
+  <link rel="canonical" href="http://lizhi.trade/2017/04/02/跨域/"/>
 
 
 
 
 
-  <title> BFC布局-学习总结 | ilz Blog </title>
+  <title> 跨域 | ilz Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -292,7 +313,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://lizhi.trade/2017/02/20/BFC布局-学习总结/">
+  <link itemprop="mainEntityOfPage" href="http://lizhi.trade/2017/04/02/跨域/">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="李智">
@@ -316,7 +337,7 @@
             
             
               
-                BFC布局-学习总结
+                跨域
               
             
           </h1>
@@ -331,8 +352,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-20T21:38:49+08:00">
-                2017-02-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-02T20:23:11+08:00">
+                2017-04-02
               </time>
             
 
@@ -350,8 +371,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/02/20/BFC布局-学习总结/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/02/20/BFC布局-学习总结/" itemprop="commentCount"></span>
+                <a href="/2017/04/02/跨域/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/04/02/跨域/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -377,42 +398,103 @@
       
 
       
-        <h2 id="一-w3c规范中的BFC定义："><a href="#一-w3c规范中的BFC定义：" class="headerlink" title="一. w3c规范中的BFC定义："></a>一. w3c规范中的BFC定义：</h2><p>“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。</p>
-<p>在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在一个BFC中，两个相邻的块级盒子的垂直外边距会产生折叠。 在BFC中，每一个盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）。</p>
-<p>也就是说BFC中的元素的布局是不受外界的影响（我们往往利用这个特性来消除浮动元素对其非浮动的兄弟元素和其子元素带来的影响）。并且在一个BFC中，块盒与行盒（行盒由一行中所有的内联元素所组成）都会垂直的沿着其父元素的边框排列。 由这段定义，我们可以得出：</p>
-<h3 id="1-哪些元素会生成BFC："><a href="#1-哪些元素会生成BFC：" class="headerlink" title="1. 哪些元素会生成BFC："></a>1. 哪些元素会生成BFC：</h3><ul>
-<li>根元素(整个页面就是一个大的BFC)；</li>
-<li>float为 left | right；</li>
-<li>overflow为 hidden | auto | scroll；</li>
-<li>display为 inline-block | table-cell | table-caption | flex | inline-flex；</li>
-<li>position为 absolute | fixed；<h3 id="2-BFC的布局规则："><a href="#2-BFC的布局规则：" class="headerlink" title="2. BFC的布局规则："></a>2. BFC的布局规则：</h3></li>
-<li>每一个BFC盒子会在垂直方向一个接一个地排列；</li>
-<li>两个BFC盒子之间的垂直的间隙是由他们的margin 值所决定的。属于同一个BFC的两个相邻盒子的垂直方向的margin会重叠；</li>
-<li>每一个BFC盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）； 4.计算BFC的高度时，浮动元素也参与计算；</li>
-<li>不与外部浮动元素重叠；</li>
-<li>BFC就是页面上的一个隔离的独立容器，容器里面的子元素与容器外部元素不会相互影响；<h2 id="二-BFC的应用实例"><a href="#二-BFC的应用实例" class="headerlink" title="二. BFC的应用实例"></a>二. BFC的应用实例</h2></li>
+        <h5 id="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"><a href="#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。" class="headerlink" title="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"></a>概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。</h5><blockquote>
+<p>出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。</p>
+</blockquote>
+<h4 id="跨域大概分为两种："><a href="#跨域大概分为两种：" class="headerlink" title="跨域大概分为两种："></a>跨域大概分为两种：</h4><ul>
+<li>第一种是xhr不能访问不同源的文档</li>
+<li>第二种是不同window之间不能进行交互操作</li>
 </ul>
-<h3 id="1-自适应两栏布局"><a href="#1-自适应两栏布局" class="headerlink" title="1. 自适应两栏布局"></a>1. 自适应两栏布局</h3><h3 id="2-清除内部浮动"><a href="#2-清除内部浮动" class="headerlink" title="2. 清除内部浮动"></a>2. 清除内部浮动</h3><h3 id="3-防止垂直margin重叠"><a href="#3-防止垂直margin重叠" class="headerlink" title="3. 防止垂直margin重叠"></a>3. 防止垂直margin重叠</h3><p>在CSS当中，相邻的两个盒子（可能是兄弟关系也可能是祖先关系）的外边距可以结合成一个单独的外边距。这种合并外边距的方式被称为折叠，并且因而所结合成的外边距称为折叠外边距。</p>
-<p><strong>折叠的结果：</strong></p>
+<h4 id="跨域通信的方法大致可以分为两类"><a href="#跨域通信的方法大致可以分为两类" class="headerlink" title="跨域通信的方法大致可以分为两类"></a>跨域通信的方法大致可以分为两类</h4><ul>
+<li>第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。</li>
+<li>第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。</li>
+</ul>
+<a id="more"></a>
+<p><strong>一.设置 document.domain</strong></p>
+<blockquote>
+<p>document.domain:获取/设置当前文档的原始域部分, 用于 同源策略.</p>
+<p>在根域范围内，Mozilla允许你把domain属性的值设置为它的<strong>上一级域</strong>。例如，在 developer.mozilla.org 域内，可以把domain设置为 “mozilla.org” 但不能设置为 “mozilla.com” 或者”org”。</p>
+</blockquote>
 <ul>
-<li>两个相邻的外边距都是正数时，折叠结果是它们两者之间较大的值；</li>
-<li>两个相邻的外边距都是负数时，折叠结果是两者绝对值的较大值；</li>
-<li>两个外边距一正一负时，折叠结果是两者的相加的和；</li>
+<li>原理：相同主域名不同子域名下的页面可以设置document.domain利用他的特性让他们同域</li>
+<li>限制：<ul>
+<li>同于document提供的是页面之间的相互操作，所以需要载入iframe页面；</li>
+<li>只适用于父子window之间的通信，不能用于xhr；</li>
+<li>只能在主域相同且子域不同的情况下使用。</li>
 </ul>
-<h3 id="产生折叠的必备条件："><a href="#产生折叠的必备条件：" class="headerlink" title="产生折叠的必备条件："></a>产生折叠的必备条件：</h3><ul>
-<li>margin必须是邻接的，没有padding和border将他们分隔开；</li>
-<li>必须是处于常规文档流（非float和绝对定位）的块级元素，并且处于同一个BFC当中；</li>
+</li>
 </ul>
-<h3 id="产生折叠的常见情况："><a href="#产生折叠的常见情况：" class="headerlink" title="产生折叠的常见情况："></a>产生折叠的常见情况：</h3><ul>
-<li>元素的margin-top与其第一个常规文档流的子元素的margin-top；</li>
-<li>元素的margin-bottom与其下一个常规文档流的兄弟元素的margin-top；</li>
-<li>height为auto的元素的margin-bottom与其最后一个常规文档流的子元素的margin-bottom；</li>
-<li>高度为0且不包含常规文档流的子元素，并且自身没有建立新的BFC的元素的margin-top和margin-bottom；</li>
+<p>举个栗子：在<a href="http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain" target="_blank" rel="external">http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain</a> = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div><div class="line"><span class="keyword">var</span> ifr = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</div><div class="line">ifr.src = <span class="string">'http://script.a.com/b.html'</span>;</div><div class="line">ifr.style.display = <span class="string">'none'</span>;</div><div class="line"><span class="built_in">document</span>.body.appendChild(ifr);</div><div class="line">ifr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> doc = ifr.contentDocument || ifr.contentWindow.document;</div><div class="line">    <span class="comment">// 在这里操纵b.html</span></div><div class="line">    alert(doc.getElementsByTagName(<span class="string">"h1"</span>)[<span class="number">0</span>].childNodes[<span class="number">0</span>].nodeValue);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>script.a.com上的b.html：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div></pre></td></tr></table></figure>
+<p><strong>二：有src的标签</strong></p>
+<ul>
+<li>原理：所有具有src属性的html标签都是可以跨域的，比如img和script</li>
+<li><p>限制：需要创建一个DOM对象，而且只能用于get方法</p>
+<p>  <strong>代表：JSONP</strong></p>
+</li>
+<li><p>浏览器对XHR做了同源策略，但并没有将这种方式延续到script上（其实还有iframe，img等），从而可以利用动态script标签技术来做到跨域请求的作用</p>
+</li>
+<li><p>JSONP由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数，而数据就是传入回调函数中的JSON数据。</p>
+<ul>
+<li>缺点：只能通过GET方式请求，一方面是参数长度有限制，二是安全性比较差；</li>
+<li>需要服务器端的页面进行相应的配合的。</li>
 </ul>
-<h3 id="浮动和绝对定位不与任何元素产生-margin-折叠："><a href="#浮动和绝对定位不与任何元素产生-margin-折叠：" class="headerlink" title="浮动和绝对定位不与任何元素产生 margin 折叠："></a>浮动和绝对定位不与任何元素产生 margin 折叠：</h3><p>原因：浮动元素和绝对定位元素不与其他盒子产生外边距折叠是因为元素会脱离当前的文档流，违反了上面所述的两个margin是邻接的条件同时，又因为浮动和绝对定位会使元素为它的内容创建新的BFC，因此该元素和子元素所处的BFC是不相同的，因此也不会产生margin的折叠；</p>
-<p>因此可以通过使元素成为BFC而避免margin折叠。BFC提供了一个独立布局的环境，每个BFC都遵守同一套布局规则。例如，在同一个BFC内，盒子会一个挨着一个的排，相邻盒子的间距是由margin决定且垂直方向的margin会重叠。而float和clear float也只对同一个BFC内的元素有效；</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实以上的几个例子都体现了BFC布局规则第六条： BFC就是页面上的一个隔离的独立容器，容器里面的子元素与容器外部元素不会相互影响。<br>因此， 当BFC外部存在浮动时，外部元素不会影响BFC内部的布局，BFC会通过变窄，而不与浮动有重叠；同样的，当BFC内部有浮动时，为了不影响外部元素的布局，BFC计算高度时会包括浮动的高度和margin值，因此可以避免margin重叠和闭合浮动。</p>
-
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script type="text/javascript"&gt;</div><div class="line">    function dosomething(jsondata)&#123;</div><div class="line">        //处理获得的json数据</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src="http://example.com/data.php?callback=dosomething"&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>js文件载入成功后会执行我们在url参数中指定的函数，并且会把我们需要的json数据作为参数传入。所以jsonp是需要服务器端的页面进行相应的配合的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];<span class="comment">//得到回调函数名</span></div><div class="line">$data = <span class="keyword">array</span>(<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>);<span class="comment">//要返回的数据</span></div><div class="line"><span class="keyword">echo</span> $callback.<span class="string">'('</span>.json_encode($data).<span class="string">')'</span>;<span class="comment">//输出</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p> <strong>三：window.name</strong></p>
+<blockquote>
+<p>window对象有个name属性，该属性有个特征：即在一个窗口(window)的生命周期内,窗口载入的所有的页面都是共享一个window.name的，每个页面对window.name都有读写的权限，window.name是持久存在一个窗口载入过的所有页面中的，并不会因新页面的载入而进行重置</p>
+</blockquote>
+<ul>
+<li>优点：<ul>
+<li>利用了浏览器的特性来做到不同域之间的数据传递</li>
+<li>不需要前后端配合</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>安全性不高，当前页面的所有window都可以修改</li>
+<li>不同浏览器对于window.name的大小有限制</li>
+<li>传递数据只能传递字符串</li>
+</ul>
+</li>
+</ul>
+<p><strong>四：navigation对象</strong></p>
+<ul>
+<li>原理：iframe之间是共享navigator对象的，用它来传递信息</li>
+<li>限制：只限于ie6/7</li>
+</ul>
+<p><strong>五：跨域资源共享（CORS）</strong></p>
+<ul>
+<li>原理：<ul>
+<li>cors是一种通过设置前后端http header配置Access-Control-Allow-Origin来进行跨域的一种方式</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，可以支持POST，PUT等方法</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p> HTML5标准中提出的跨域资源共享（Cross Origin Resource Share，CORS）才是正道。 它支持其他的HTTP方法如PUT, POST等，可以从本质上解决跨域问题<br>比如我们要从<a href="http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段" target="_blank" rel="external">http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段</a></p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Access-Control-Allow-Origin: *              # 允许所有域名访问，或者</div><div class="line">Access-Control-Allow-Origin: http://a.com   # 只允许特定域名访问</div></pre></td></tr></table></figure>
+<p><strong>六：window.postMessage</strong></p>
+<ul>
+<li>原理：<ul>
+<li>HTML5允许窗口之间发送消息</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，获取窗口句柄后才能相互通信</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// URL: http://a.com/foo</span></div><div class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'http://b.com/bar'</span>);</div><div class="line">win.postMessage(<span class="string">'Hello, bar!'</span>, <span class="string">'http://b.com'</span>); </div><div class="line"></div><div class="line"><span class="comment">// URL: http://b.com/bar</span></div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(event.data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -456,7 +538,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/布局/" rel="tag"># 布局</a>
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
           
         </div>
       
@@ -469,15 +551,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/03/19/根据URL编码获取汉字真正的Unicode编码/" rel="next" title="根据URL编码获取汉字真正的Unicode编码">
+                <i class="fa fa-chevron-left"></i> 根据URL编码获取汉字真正的Unicode编码
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/21/JavaScript中实现继承的各种姿势/" rel="prev" title="JavaScript中实现继承的各种姿势">
-                JavaScript中实现继承的各种姿势 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -526,8 +608,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/02/20/BFC布局-学习总结/"
-           data-title="BFC布局-学习总结" data-url="http://lizhi.trade/2017/02/20/BFC布局-学习总结/">
+      <div class="ds-thread" data-thread-key="2017/04/02/跨域/"
+           data-title="跨域" data-url="http://lizhi.trade/2017/04/02/跨域/">
       </div>
     
   </div>
@@ -656,7 +738,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-w3c规范中的BFC定义："><span class="nav-number">1.</span> <span class="nav-text">一. w3c规范中的BFC定义：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-哪些元素会生成BFC："><span class="nav-number">1.1.</span> <span class="nav-text">1. 哪些元素会生成BFC：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-BFC的布局规则："><span class="nav-number">1.2.</span> <span class="nav-text">2. BFC的布局规则：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-BFC的应用实例"><span class="nav-number">2.</span> <span class="nav-text">二. BFC的应用实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-自适应两栏布局"><span class="nav-number">2.1.</span> <span class="nav-text">1. 自适应两栏布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-清除内部浮动"><span class="nav-number">2.2.</span> <span class="nav-text">2. 清除内部浮动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-防止垂直margin重叠"><span class="nav-number">2.3.</span> <span class="nav-text">3. 防止垂直margin重叠</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#产生折叠的必备条件："><span class="nav-number">2.4.</span> <span class="nav-text">产生折叠的必备条件：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#产生折叠的常见情况："><span class="nav-number">2.5.</span> <span class="nav-text">产生折叠的常见情况：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮动和绝对定位不与任何元素产生-margin-折叠："><span class="nav-number">2.6.</span> <span class="nav-text">浮动和绝对定位不与任何元素产生 margin 折叠：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"><span class="nav-number">1.</span> <span class="nav-text">概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#跨域大概分为两种："><span class="nav-number"></span> <span class="nav-text">跨域大概分为两种：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#跨域通信的方法大致可以分为两类"><span class="nav-number"></span> <span class="nav-text">跨域通信的方法大致可以分为两类</span></a></div>
             
 
           </div>

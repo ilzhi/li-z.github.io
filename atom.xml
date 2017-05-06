@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://lizhi.trade/"/>
-  <updated>2017-03-19T11:25:34.748Z</updated>
+  <updated>2017-05-06T10:45:49.962Z</updated>
   <id>http://lizhi.trade/</id>
   
   <author>
@@ -14,6 +14,132 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>跨域</title>
+    <link href="http://lizhi.trade/2017/04/02/%E8%B7%A8%E5%9F%9F/"/>
+    <id>http://lizhi.trade/2017/04/02/跨域/</id>
+    <published>2017-04-02T12:23:11.000Z</published>
+    <updated>2017-05-06T10:45:49.962Z</updated>
+    
+    <content type="html"><![CDATA[<h5 id="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"><a href="#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。" class="headerlink" title="概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。"></a>概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。</h5><blockquote>
+<p>出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。</p>
+</blockquote>
+<h4 id="跨域大概分为两种："><a href="#跨域大概分为两种：" class="headerlink" title="跨域大概分为两种："></a>跨域大概分为两种：</h4><ul>
+<li>第一种是xhr不能访问不同源的文档</li>
+<li>第二种是不同window之间不能进行交互操作</li>
+</ul>
+<h4 id="跨域通信的方法大致可以分为两类"><a href="#跨域通信的方法大致可以分为两类" class="headerlink" title="跨域通信的方法大致可以分为两类"></a>跨域通信的方法大致可以分为两类</h4><ul>
+<li>第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。</li>
+<li>第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。</li>
+</ul>
+<a id="more"></a>
+<p><strong>一.设置 document.domain</strong></p>
+<blockquote>
+<p>document.domain:获取/设置当前文档的原始域部分, 用于 同源策略.</p>
+<p>在根域范围内，Mozilla允许你把domain属性的值设置为它的<strong>上一级域</strong>。例如，在 developer.mozilla.org 域内，可以把domain设置为 “mozilla.org” 但不能设置为 “mozilla.com” 或者”org”。</p>
+</blockquote>
+<ul>
+<li>原理：相同主域名不同子域名下的页面可以设置document.domain利用他的特性让他们同域</li>
+<li>限制：<ul>
+<li>同于document提供的是页面之间的相互操作，所以需要载入iframe页面；</li>
+<li>只适用于父子window之间的通信，不能用于xhr；</li>
+<li>只能在主域相同且子域不同的情况下使用。</li>
+</ul>
+</li>
+</ul>
+<p>举个栗子：在<a href="http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain" target="_blank" rel="external">http://www.a.com/a.html和http://script.a.com/b.html两个文件中分别加上document.domain</a> = ‘a.com’；然后通过a.html文件中创建一个iframe，去控制iframe的contentDocument，这样两个js文件之间就可以“交互”了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div><div class="line"><span class="keyword">var</span> ifr = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>);</div><div class="line">ifr.src = <span class="string">'http://script.a.com/b.html'</span>;</div><div class="line">ifr.style.display = <span class="string">'none'</span>;</div><div class="line"><span class="built_in">document</span>.body.appendChild(ifr);</div><div class="line">ifr.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> doc = ifr.contentDocument || ifr.contentWindow.document;</div><div class="line">    <span class="comment">// 在这里操纵b.html</span></div><div class="line">    alert(doc.getElementsByTagName(<span class="string">"h1"</span>)[<span class="number">0</span>].childNodes[<span class="number">0</span>].nodeValue);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>script.a.com上的b.html：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">document</span>.domain = <span class="string">'a.com'</span>;</div></pre></td></tr></table></figure>
+<p><strong>二：有src的标签</strong></p>
+<ul>
+<li>原理：所有具有src属性的html标签都是可以跨域的，比如img和script</li>
+<li><p>限制：需要创建一个DOM对象，而且只能用于get方法</p>
+<p>  <strong>代表：JSONP</strong></p>
+</li>
+<li><p>浏览器对XHR做了同源策略，但并没有将这种方式延续到script上（其实还有iframe，img等），从而可以利用动态script标签技术来做到跨域请求的作用</p>
+</li>
+<li><p>JSONP由两部分组成：回调函数和数据。回调函数是当响应到来时应该在页面中调用的函数，而数据就是传入回调函数中的JSON数据。</p>
+<ul>
+<li>缺点：只能通过GET方式请求，一方面是参数长度有限制，二是安全性比较差；</li>
+<li>需要服务器端的页面进行相应的配合的。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script type="text/javascript"&gt;</div><div class="line">    function dosomething(jsondata)&#123;</div><div class="line">        //处理获得的json数据</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src="http://example.com/data.php?callback=dosomething"&gt;&lt;/script&gt;</div></pre></td></tr></table></figure>
+<p>js文件载入成功后会执行我们在url参数中指定的函数，并且会把我们需要的json数据作为参数传入。所以jsonp是需要服务器端的页面进行相应的配合的。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$callback = $_GET[<span class="string">'callback'</span>];<span class="comment">//得到回调函数名</span></div><div class="line">$data = <span class="keyword">array</span>(<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>);<span class="comment">//要返回的数据</span></div><div class="line"><span class="keyword">echo</span> $callback.<span class="string">'('</span>.json_encode($data).<span class="string">')'</span>;<span class="comment">//输出</span></div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p> <strong>三：window.name</strong></p>
+<blockquote>
+<p>window对象有个name属性，该属性有个特征：即在一个窗口(window)的生命周期内,窗口载入的所有的页面都是共享一个window.name的，每个页面对window.name都有读写的权限，window.name是持久存在一个窗口载入过的所有页面中的，并不会因新页面的载入而进行重置</p>
+</blockquote>
+<ul>
+<li>优点：<ul>
+<li>利用了浏览器的特性来做到不同域之间的数据传递</li>
+<li>不需要前后端配合</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>安全性不高，当前页面的所有window都可以修改</li>
+<li>不同浏览器对于window.name的大小有限制</li>
+<li>传递数据只能传递字符串</li>
+</ul>
+</li>
+</ul>
+<p><strong>四：navigation对象</strong></p>
+<ul>
+<li>原理：iframe之间是共享navigator对象的，用它来传递信息</li>
+<li>限制：只限于ie6/7</li>
+</ul>
+<p><strong>五：跨域资源共享（CORS）</strong></p>
+<ul>
+<li>原理：<ul>
+<li>cors是一种通过设置前后端http header配置Access-Control-Allow-Origin来进行跨域的一种方式</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，可以支持POST，PUT等方法</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p> HTML5标准中提出的跨域资源共享（Cross Origin Resource Share，CORS）才是正道。 它支持其他的HTTP方法如PUT, POST等，可以从本质上解决跨域问题<br>比如我们要从<a href="http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段" target="_blank" rel="external">http://a.com访问http://b.com我们可以直接在b.com的服务器中设置相应字段</a></p>
+</blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Access-Control-Allow-Origin: *              # 允许所有域名访问，或者</div><div class="line">Access-Control-Allow-Origin: http://a.com   # 只允许特定域名访问</div></pre></td></tr></table></figure>
+<p><strong>六：window.postMessage</strong></p>
+<ul>
+<li>原理：<ul>
+<li>HTML5允许窗口之间发送消息</li>
+</ul>
+</li>
+<li>限制：<ul>
+<li>浏览器需要支持HTML5，获取窗口句柄后才能相互通信</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// URL: http://a.com/foo</span></div><div class="line"><span class="keyword">var</span> win = <span class="built_in">window</span>.open(<span class="string">'http://b.com/bar'</span>);</div><div class="line">win.postMessage(<span class="string">'Hello, bar!'</span>, <span class="string">'http://b.com'</span>); </div><div class="line"></div><div class="line"><span class="comment">// URL: http://b.com/bar</span></div><div class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(event.data);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h5 id=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;a href=&quot;#概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot; class=&quot;headerlink&quot; title=&quot;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&quot;&gt;&lt;/a&gt;概念：只要协议、域名、端口有任何一个不同，都被当作是不同的域。&lt;/h5&gt;&lt;blockquote&gt;
+&lt;p&gt;出于安全考虑，HTML的同源策略不允许JavaScript进行跨域操作，但是随着Web App的功能越来越强，对于跨域的需求也是与日俱增。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;跨域大概分为两种：&quot;&gt;&lt;a href=&quot;#跨域大概分为两种：&quot; class=&quot;headerlink&quot; title=&quot;跨域大概分为两种：&quot;&gt;&lt;/a&gt;跨域大概分为两种：&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;第一种是xhr不能访问不同源的文档&lt;/li&gt;
+&lt;li&gt;第二种是不同window之间不能进行交互操作&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;a href=&quot;#跨域通信的方法大致可以分为两类&quot; class=&quot;headerlink&quot; title=&quot;跨域通信的方法大致可以分为两类&quot;&gt;&lt;/a&gt;跨域通信的方法大致可以分为两类&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;第一种是Hack，例如通过title，navigation等对象传递信息，最典型的就是JSONP。&lt;/li&gt;
+&lt;li&gt;第二类是HTML5支持，一个是Access-Control-Allow-Origin响应头，一个是window.postMessage。&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
+    
+  </entry>
   
   <entry>
     <title>根据URL编码获取汉字真正的Unicode编码</title>
@@ -125,6 +251,257 @@
   </entry>
   
   <entry>
+    <title>闭包</title>
+    <link href="http://lizhi.trade/2017/03/12/%E9%97%AD%E5%8C%85/"/>
+    <id>http://lizhi.trade/2017/03/12/闭包/</id>
+    <published>2017-03-12T07:46:37.000Z</published>
+    <updated>2017-05-06T10:45:42.091Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>闭包的形成与变量的作用域以及变量的生存周期密切相关。下面我们先简单了解这两个知识点</strong></p>
+<h3 id="一：变量的作用域"><a href="#一：变量的作用域" class="headerlink" title="一：变量的作用域"></a>一：变量的作用域</h3><p> 变量的作用域，就是指变量的有效范围。我们最常谈到的是在函数中声明的变量作用域。</p>
+<ul>
+<li><p>当在函数中声明一个变量的时候，如果该变量前面没有带上关键字 var，这个变量就会成为<br>全局变量，这当然是一种容易造成命名冲突的做法。</p>
+</li>
+<li><p>另外一种情况是用 var 关键字在函数中声明变量，这时候的变量即是局部变量，只有在该函<br>数内部才能访问到这个变量，在函数外面是访问不到的。</p>
+</li>
+</ul>
+<a id="more"></a>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line">  <span class="keyword">var</span> func1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> b = <span class="number">2</span>;</div><div class="line">    <span class="keyword">var</span> func2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="keyword">var</span> c = <span class="number">3</span>;</div><div class="line">      alert ( b ); <span class="comment">// 输出： 2</span></div><div class="line">      alert ( a ); <span class="comment">// 输出： 1</span></div><div class="line">    &#125;</div><div class="line">    func2();</div><div class="line">    alert ( c ); <span class="comment">// 输出： Uncaught ReferenceError: c is not defined</span></div><div class="line">  &#125;;</div><div class="line">func1();</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>：在 JavaScript 中，函数可以用来创造函数作用域。此时的函数像一层半透明的玻璃，在函数<br>里面可以看到外面的变量，而在函数外面则无法看到函数里面的变量。这是因为当在函数中搜索<br>一个变量的时候，如果该函数内并没有声明这个变量，那么此次搜索的过程会随着代码执行环境<br>创建的作用域链往外层逐层搜索，一直搜索到全局对象为止。<strong>变量的搜索是从内到外而非从外到<br>内的</strong></p>
+<h3 id="二：变量的生存周期"><a href="#二：变量的生存周期" class="headerlink" title="二：变量的生存周期"></a>二：变量的生存周期</h3><ul>
+<li><p>对于全局变量来说，全局变量的生存周期当然是永久的，除非我们主动销毁这个全局变量。</p>
+</li>
+<li><p>而对于在函数内用 var 关键字声明的局部变量来说，当退出函数时，这些局部变量即失去了<br>它们的价值，它们都会随着函数调用的结束而被销毁。</p>
+</li>
+</ul>
+<p><strong>但是因为有闭包的存在却产生了很多奇妙的事情，小伙伴们看下面的情形</strong>：</p>
+<p>1：假设页面上有 5 个<br>div 节点，我们通过循环来给每个 div 绑定 onclick 事件，按照索引顺序，点击第 1 个 div 时弹出<br>0，点击第 2 个 div 时弹出 1，以此类推，你会怎么做呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>1<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>2<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>3<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>4<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">div</span>&gt;</span>5<span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">    <span class="keyword">var</span> nodes = <span class="built_in">document</span>.getElementsByTagName( <span class="string">'div'</span> );</div><div class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, len = nodes.length; i &lt; len; i++ )&#123;</div><div class="line">      nodes[ i ].onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        alert ( i );</div><div class="line">      &#125;</div><div class="line">    &#125;;</div><div class="line">  <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>你是不是这么想的？嗯哼~ 厉害了，不过错了，啦啦啦，</p>
+<blockquote>
+<p>测试这段代码就会发现，无论点击哪个 div，最后弹出的结果都是 5。这是因为 div 节点的<br>onclick 事件是被<strong>异步触发</strong>的，当事件被触发的时候， for 循环早已结束，此时变量 i 的值已经是<br>5，所以在 div 的 onclick 事件函数中顺着作用域链从内到外查找变量 i 时，<strong>查找到的值总是 5</strong>。</p>
+</blockquote>
+<p> 那怎么办呢？闭包呀，吃包子喽！</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, len = nodes.length; i &lt; len; i++ )&#123;</div><div class="line">    (<span class="function"><span class="keyword">function</span>(<span class="params"> i </span>)</span>&#123;</div><div class="line">      nodes[ i ].onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(i);</div><div class="line">      &#125;</div><div class="line">    &#125;)( i )</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h3 id="三：闭包的更多形式和作用"><a href="#三：闭包的更多形式和作用" class="headerlink" title="三：闭包的更多形式和作用"></a>三：闭包的更多形式和作用</h3><h4 id="小闭包形式："><a href="#小闭包形式：" class="headerlink" title="小闭包形式："></a>小闭包形式：</h4><blockquote>
+<p>1.()()</p>
+<p>2.;()()</p>
+<p>3.+()()</p>
+<p>4.-()()</p>
+</blockquote>
+<p><strong>目的：全局变量私有化</strong></p>
+<h4 id="优点："><a href="#优点：" class="headerlink" title="优点："></a>优点：</h4><blockquote>
+<p>1.不污染全局变量</p>
+<p>2.内部的临时变量执行完毕都会释放，不会占据内存</p>
+<p>3.避免使用全局变量</p>
+<p>4.更新复杂变量</p>
+</blockquote>
+<h4 id="1-封装变量"><a href="#1-封装变量" class="headerlink" title="1.封装变量"></a>1.封装变量</h4><ul>
+<li>计算乘积</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> mult = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> cache = &#123;&#125;;</div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> args = <span class="built_in">Array</span>.prototype.join.call( <span class="built_in">arguments</span>, <span class="string">','</span> );</div><div class="line">    <span class="keyword">if</span> ( args <span class="keyword">in</span> cache )&#123;</div><div class="line">      <span class="keyword">return</span> cache[ args ];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> a = <span class="number">1</span>;</div><div class="line">    <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, l = <span class="built_in">arguments</span>.length; i &lt; l; i++ )&#123;</div><div class="line">      a = a * <span class="built_in">arguments</span>[i];</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cache[ args ] = a;</div><div class="line">  &#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>小伙伴们可看出什么猫腻？对于那些相同的参数来说，每次都进行计算是一种浪费，我们可以像上面那样加入缓存机制来提高这个函数的性能，是不是很机智呢？</p>
+<p><strong>补充点</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Type = &#123;&#125;;</div><div class="line"> <span class="keyword">for</span> ( <span class="keyword">var</span> i = <span class="number">0</span>, type; type = [ <span class="string">'String'</span>, <span class="string">'Array'</span>, <span class="string">'Number'</span> ][ i++ ]; )&#123;<span class="comment">//i++到3的时候type为undefined，结束循环</span></div><div class="line">   (<span class="function"><span class="keyword">function</span>(<span class="params"> type </span>)</span>&#123;</div><div class="line">     Type[ <span class="string">'is'</span> + type ] = <span class="function"><span class="keyword">function</span>(<span class="params"> obj </span>)</span>&#123;</div><div class="line">       <span class="keyword">return</span> <span class="built_in">Object</span>.prototype.toString.call( obj ) === <span class="string">'[object '</span>+ type +<span class="string">']'</span>;</div><div class="line">     &#125;</div><div class="line">   &#125;)( type )</div><div class="line"> &#125;;</div><div class="line"> <span class="built_in">console</span>.log(Type.isArray([]));</div><div class="line"> <span class="built_in">console</span>.log(Type.isString(<span class="string">"str"</span>));</div><div class="line"> <span class="built_in">console</span>.log(<span class="literal">undefined</span> == <span class="literal">false</span>);<span class="comment">//false</span></div></pre></td></tr></table></figure>
+<p>反正我觉得很好玩，哈哈。</p>
+<h4 id="2-延续局部变量的寿命，并读取"><a href="#2-延续局部变量的寿命，并读取" class="headerlink" title="2.延续局部变量的寿命，并读取"></a>2.延续局部变量的寿命，并读取</h4><ul>
+<li>引用循环变量，如下所示：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">count</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> arr = [];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">1</span>; i&lt;=<span class="number">3</span>; i++) &#123;</div><div class="line">        arr.push(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> i * i;</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> arr;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> results = count();</div><div class="line"><span class="keyword">var</span> f1 = results[<span class="number">0</span>];</div><div class="line"><span class="keyword">var</span> f2 = results[<span class="number">1</span>];</div><div class="line"><span class="keyword">var</span> f3 = results[<span class="number">2</span>];</div></pre></td></tr></table></figure>
+<p>小伙伴们看这个有什么感触么？调用f1,f2,f3会有什么结果呢？是的，结果往往那么不如人意~~~</p>
+<blockquote>
+<p>f1(); // 16</p>
+<p>f2(); // 16</p>
+<p>f3(); // 16</p>
+</blockquote>
+<p>Why?原因就在于返回的函数引用了变量i，但它<strong>并非立刻执行</strong>。等到3个函数都返回时，它们所引用的变量i已经变成了4，因此最终结果为16。</p>
+<p><strong>返回闭包时牢记的一点就是：返回函数不要引用任何循环变量，或者后续会发生变化的变量。</strong></p>
+<p>如果一定要引用，那么又要小包子上场了<strong>方法是再创建一个函数，用该函数的参数绑定循环变量当前的值，无论该循环变量后续如何更改，已绑定到函数参数的值不变：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">count</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> arr = [];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">1</span>; i&lt;=<span class="number">3</span>; i++) &#123;</div><div class="line">        arr.push((<span class="function"><span class="keyword">function</span> (<span class="params">n</span>) </span>&#123;</div><div class="line">            <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">                <span class="keyword">return</span> n * n;</div><div class="line">            &#125;</div><div class="line">        &#125;)(i));</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> arr;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">var</span> results = count();</div><div class="line"><span class="keyword">var</span> f1 = results[<span class="number">0</span>];</div><div class="line"><span class="keyword">var</span> f2 = results[<span class="number">1</span>];</div><div class="line"><span class="keyword">var</span> f3 = results[<span class="number">2</span>];</div><div class="line"></div><div class="line">f1(); <span class="comment">// 1</span></div><div class="line">f2(); <span class="comment">// 4</span></div><div class="line">f3(); <span class="comment">// 9</span></div></pre></td></tr></table></figure>
+<ul>
+<li>img 对象经常用于进行数据上报，如下所示：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> report = <span class="function"><span class="keyword">function</span>(<span class="params"> src </span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</div><div class="line">  img.src = src;</div><div class="line">&#125;;</div><div class="line">report( <span class="string">'http://xxx.com/getUserInfo'</span> );</div></pre></td></tr></table></figure>
+<p>但是通过查询后台的记录我们得知，因为一些低版本浏览器的实现存在 bug，在这些浏览器<br>下使用 report 函数进行数据上报会丢失 30%左右的数据，<strong>也就是说， report 函数并不是每一次<br>都成功发起了 HTTP 请求。丢失数据的原因是 img 是 report 函数中的局部变量，当 report 函数的<br>调用结束后， img 局部变量随即被销毁，而此时或许还没来得及发出 HTTP 请求，所以此次请求<br>就会丢失掉</strong>。</p>
+<p>现在我们把<strong>img 变量用闭包封闭起来</strong>，便能解决请求丢失的问题：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> report = (<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> imgs = [];</div><div class="line">  <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"> src </span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> img = <span class="keyword">new</span> Image();</div><div class="line">    imgs.push( img );</div><div class="line">    img.src = src;</div><div class="line">&#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<h4 id="3-高级排他"><a href="#3-高级排他" class="headerlink" title="3.高级排他"></a>3.高级排他</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> ul = <span class="built_in">document</span>.getElementById(<span class="string">'ul'</span>);</div><div class="line">  <span class="keyword">var</span> lis = ul.children;</div><div class="line">  <span class="keyword">var</span> lastOne = <span class="number">0</span>;</div><div class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i =<span class="number">0</span>; i &lt; lis.length;i++)&#123;</div><div class="line">    (<span class="function"><span class="keyword">function</span> (<span class="params">index</span>) </span>&#123;</div><div class="line">      lis[i].onmouseover = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        lis[lastOne].className = <span class="string">''</span>;</div><div class="line">        <span class="keyword">this</span>.className = <span class="string">'current'</span>;</div><div class="line">        lastOne = index</div><div class="line">      &#125;</div><div class="line">    &#125;)(i)</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div></pre></td></tr></table></figure>
+<p><strong>每次移动把之前的样式清除，再把当前的设置样式，再次重置初始值。此处还要注意js执行任务的顺序</strong></p>
+<h4 id="4-函数节流"><a href="#4-函数节流" class="headerlink" title="4.函数节流"></a>4.函数节流</h4><ul>
+<li>使用场景<ul>
+<li>window.onresize 事件。<ul>
+<li>我们给 window 对象绑定了 resize 事件，当浏览器窗口大小被拖动<br>而改变的时候，这个事件触发的频率非常之高。如果我们在 window.onresize 事件函数里<br>有一些跟 DOM 节点相关的操作，而跟 DOM 节点相关的操作往往是非常消耗性能的，这<br>时候浏览器可能就会吃不消而造成卡顿现象。</li>
+</ul>
+</li>
+<li>mousemove 事件。<ul>
+<li>如果我们给一个 div 节点绑定了拖曳事件（主要是 mousemove） ，当<br>div 节点被拖动的时候，也会频繁地触发该拖曳事件函数。</li>
+</ul>
+</li>
+<li>上传进度。<ul>
+<li>微云的上传功能使用了公司提供的一个浏览器插件。该浏览器插件在真正开<br>始上传文件之前，会对文件进行扫描并随时通知 JavaScript 函数，以便在页面中显示当前<br>的扫描进度。但该插件通知的频率非常之高，大约一秒钟 10 次，很显然我们在页面中不<br>需要如此频繁地去提示用户</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第一种</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn, interval</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> timeoutID = <span class="literal">null</span>,  <span class="comment">//保存需要被延迟执行的函数引用</span></div><div class="line">        firstTime = <span class="literal">true</span>;  <span class="comment">// 是否是第一次调用</span></div><div class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">      <span class="keyword">var</span> self = <span class="keyword">this</span>; <span class="comment">//保存函数的运行环境</span></div><div class="line">      <span class="built_in">console</span>.log(self);</div><div class="line">      <span class="keyword">var</span> args = <span class="built_in">arguments</span>;</div><div class="line">      <span class="keyword">if</span> (firstTime) &#123;<span class="comment">// 如果是第一次调用，不需延迟执行</span></div><div class="line">        fn.apply(<span class="keyword">this</span>, args);</div><div class="line">        firstTime = <span class="literal">false</span></div><div class="line">        <span class="keyword">return</span>;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">if</span> (timeoutID) &#123; <span class="comment">// 如果定时器还在，说明前一次延迟执行还没有完成</span></div><div class="line">        <span class="keyword">return</span>;</div><div class="line">      &#125;</div><div class="line">      timeoutID = setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="comment">// 延迟一段时间执行</span></div><div class="line">        clearTimeout(timeoutID);</div><div class="line">        timeoutID = <span class="literal">null</span>;</div><div class="line">        fn.apply(self, args)</div><div class="line">      &#125;, interval || <span class="number">500</span>);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">  <span class="comment">//  这里的意思是window对象上的方法onresize的值是throttle的返回值，所以返回值里面的this指向的是window这个对象，如果是div，onmousemove的话那this就是指向的div了，但是因为闭包返回的函数中的this指向window，所以为了保证this一直是window才用self保存了this从而保存了throttle返回函数的运行环境</span></div><div class="line">  <span class="built_in">window</span>.onresize = throttle(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>);</div><div class="line">  &#125;, <span class="number">500</span>);</div></pre></td></tr></table></figure>
+<h3 id="四：闭包和面向对象设计"><a href="#四：闭包和面向对象设计" class="headerlink" title="四：闭包和面向对象设计"></a>四：闭包和面向对象设计</h3><p><strong>过程与数据的结合是形容面向对象中的“对象”时经常使用的表达</strong></p>
+<p>闭包方式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> extent = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">var</span> value = <span class="number">0</span>;</div><div class="line">  <span class="keyword">return</span> &#123;</div><div class="line">    <span class="attr">call</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      value++;</div><div class="line">      <span class="built_in">console</span>.log( value );</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">var</span> extent = extent();</div></pre></td></tr></table></figure>
+<p>面向对象方式</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Extent = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">this</span>.value = <span class="number">0</span>;</div><div class="line">&#125;;</div><div class="line">Extent.prototype.call = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">this</span>.value++;</div><div class="line">  <span class="built_in">console</span>.log( <span class="keyword">this</span>.value );</div><div class="line">&#125;;</div><div class="line"><span class="keyword">var</span> extent = <span class="keyword">new</span> Extent();</div><div class="line">extent.call();</div><div class="line">extent.call();</div><div class="line">extent.call();</div></pre></td></tr></table></figure>
+<h3 id="五：用闭包实现命令模式"><a href="#五：用闭包实现命令模式" class="headerlink" title="五：用闭包实现命令模式"></a>五：用闭包实现命令模式</h3><ul>
+<li><p>命令模式的意图是把请求封装为对象，从而分离请求的发起者和请求的接收者（执行者）之<br>间的耦合关系。在命令被执行之前，可以预先往命令对象中植入命令的接收者。</p>
+<ul>
+<li>在面向对象版本的命令模式中，预先植入的命令接收者被当成对象的属性保存起<br>来；</li>
+<li>在闭包版本的命令模式中，命令接收者会被封闭在闭包形成的环境中。</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>面向对象版本</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">&lt;html&gt;</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span></div><div class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"execute"</span>&gt;</span>点击我执行命令<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">"undo"</span>&gt;</span>点击我执行命令<span class="tag">&lt;/<span class="name">button</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">  <span class="keyword">var</span> Tv = &#123;</div><div class="line">    <span class="attr">open</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="built_in">console</span>.log( <span class="string">'打开电视机'</span> );</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">close</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="built_in">console</span>.log( <span class="string">'关上电视机'</span> );</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  <span class="keyword">var</span> OpenTvCommand = <span class="function"><span class="keyword">function</span>(<span class="params"> receiver </span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.receiver = receiver;</div><div class="line">  &#125;;</div><div class="line">  OpenTvCommand.prototype.execute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.receiver.open(); <span class="comment">// 执行命令，打开电视机</span></div><div class="line">  &#125;;</div><div class="line">  OpenTvCommand.prototype.undo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.receiver.close(); <span class="comment">// 撤销命令，关闭电视机</span></div><div class="line">  &#125;;</div><div class="line">  <span class="keyword">var</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params"> command </span>)</span>&#123;</div><div class="line">    <span class="built_in">document</span>.getElementById( <span class="string">'execute'</span> ).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      command.execute(); <span class="comment">// 输出：打开电视机</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">document</span>.getElementById( <span class="string">'undo'</span> ).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      command.undo(); <span class="comment">// 输出：关闭电视机</span></div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  setCommand( <span class="keyword">new</span> OpenTvCommand( Tv ) );</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line">&lt;<span class="regexp">/html&gt;</span></div></pre></td></tr></table></figure>
+<ul>
+<li>闭包版本</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> Tv = &#123;</div><div class="line">    <span class="attr">open</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="built_in">console</span>.log( <span class="string">'打开电视机'</span> );</div><div class="line">    &#125;,</div><div class="line">    <span class="attr">close</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log( <span class="string">'关上电视机'</span> );</div><div class="line">  &#125;</div><div class="line">  &#125;;</div><div class="line">  <span class="keyword">var</span> createCommand = <span class="function"><span class="keyword">function</span>(<span class="params"> receiver </span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> execute = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="keyword">return</span> receiver.open(); <span class="comment">// 执行命令，打开电视机</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">var</span> undo = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      <span class="keyword">return</span> receiver.close(); <span class="comment">// 执行命令，关闭电视机</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> &#123;</div><div class="line">      <span class="attr">execute</span>: execute,</div><div class="line">      <span class="attr">undo</span>: undo</div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  <span class="keyword">var</span> setCommand = <span class="function"><span class="keyword">function</span>(<span class="params"> command </span>)</span>&#123;</div><div class="line">    <span class="built_in">document</span>.getElementById( <span class="string">'execute'</span> ).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      command.execute(); <span class="comment">// 输出：打开电视机</span></div><div class="line">    &#125;</div><div class="line">    <span class="built_in">document</span>.getElementById( <span class="string">'undo'</span> ).onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">      command.undo(); <span class="comment">// 输出：关闭电视机</span></div><div class="line">    &#125;</div><div class="line">  &#125;;</div><div class="line">  setCommand( createCommand( Tv ) );</div></pre></td></tr></table></figure>
+<h3 id="六：闭包与内存管理"><a href="#六：闭包与内存管理" class="headerlink" title="六：闭包与内存管理"></a>六：闭包与内存管理</h3><ul>
+<li><p>局部变量本来应该在函数退出的时候被解除引用，但如果局部变量被封闭在闭包形成的环境<br>中，那么这个局部变量就能一直生存下去。从这个意义上看，闭包的确会使一些数据无法被及时<br>销毁。</p>
+<ul>
+<li><strong>使用闭包的一部分原因是我们选择主动把一些变量封闭在闭包中，因为可能在以后还需要<br>使用这些变量，把这些变量放在闭包中和放在全局作用域，对内存方面的影响是一致的，这里并<br>不能说成是内存泄露。如果在将来需要回收这些变量，我们可以手动把这些变量设为 null</strong>。</li>
+</ul>
+</li>
+<li><p><strong>跟闭包和内存泄露有关系的地方是，使用闭包的同时比较容易形成循环引用</strong>，如果闭包的作<br>用域链中保存着一些 DOM 节点，这时候就有可能造成内存泄露。但这本身并非闭包的问题，也<br>并非 JavaScript 的问题。</p>
+<ul>
+<li>在 IE 浏览器中，由于 BOM 和 DOM 中的对象是使用 C++以 COM 对象的方式实现的，而 COM 对象的垃圾收集机制采用的是<strong>引用计数策略</strong>。在基于引用计数策略的垃圾回收机制中，如果两个对象之间形成了循环引用，那么这两个对象都无法被回收，但循环引用造成的内存泄露在本质上也不是闭包造成的。</li>
+</ul>
+</li>
+<li><p>同样，<strong>如果要解决循环引用带来的内存泄露问题，我们只需要把循环引用中的变量设为 null<br>即可。将变量设置为 null 意味着切断变量与它此前引用的值之间的连接。当垃圾收集器下次运<br>行时，就会删除这些值并回收它们占用的内存</strong>。</p>
+</li>
+</ul>
+<p><strong>ok，收工！</strong></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;闭包的形成与变量的作用域以及变量的生存周期密切相关。下面我们先简单了解这两个知识点&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;一：变量的作用域&quot;&gt;&lt;a href=&quot;#一：变量的作用域&quot; class=&quot;headerlink&quot; title=&quot;一：变量的作用域&quot;&gt;&lt;/a&gt;一：变量的作用域&lt;/h3&gt;&lt;p&gt; 变量的作用域，就是指变量的有效范围。我们最常谈到的是在函数中声明的变量作用域。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;当在函数中声明一个变量的时候，如果该变量前面没有带上关键字 var，这个变量就会成为&lt;br&gt;全局变量，这当然是一种容易造成命名冲突的做法。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;另外一种情况是用 var 关键字在函数中声明变量，这时候的变量即是局部变量，只有在该函&lt;br&gt;数内部才能访问到这个变量，在函数外面是访问不到的。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+    
+    </summary>
+    
+    
+      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>this</title>
+    <link href="http://lizhi.trade/2017/03/02/this/"/>
+    <id>http://lizhi.trade/2017/03/02/this/</id>
+    <published>2017-03-02T12:57:53.000Z</published>
+    <updated>2017-05-06T10:45:41.066Z</updated>
+    
+    <content type="html"><![CDATA[<p><strong>this是Javascript语言的一个关键字</strong></p>
+<h2 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h2><h3 id="注意点："><a href="#注意点：" class="headerlink" title="注意点："></a>注意点：</h3><h3 id="在绝大多数情况下，函数的调用方式决定了this的值。"><a href="#在绝大多数情况下，函数的调用方式决定了this的值。" class="headerlink" title="在绝大多数情况下，函数的调用方式决定了this的值。"></a>在绝大多数情况下，函数的调用方式决定了this的值。</h3><h3 id="this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同"><a href="#this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同" class="headerlink" title="this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同"></a>this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同</h3><a id="more"></a>
+<h4 id="全局环境"><a href="#全局环境" class="headerlink" title="全局环境"></a>全局环境</h4><ul>
+<li>在全局运行上下文（全局环境）中（在任何函数体外部），this指代全局对象，无论是否在严格模式下</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 在浏览器中，全局对象为 window 对象：</span></div><div class="line"><span class="built_in">console</span>.log(<span class="keyword">this</span> === <span class="built_in">window</span>); <span class="comment">// true</span></div><div class="line"><span class="keyword">this</span>.a = <span class="number">37</span>;</div><div class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.a); <span class="comment">// 37</span></div></pre></td></tr></table></figure>
+<h4 id="函数上下文"><a href="#函数上下文" class="headerlink" title="函数上下文"></a>函数上下文</h4><blockquote>
+<p>在函数内部，this的值取决于函数是如何调用的。</p>
+</blockquote>
+<h5 id="1-直接调用时的this"><a href="#1-直接调用时的this" class="headerlink" title="1. 直接调用时的this"></a>1. 直接调用时的this</h5><ul>
+<li>因为下面的代码不是在严格模式下执行，并且this的值不会在函数执行时被设置，此时的this的值会默认设置为<strong>全局对象</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f1</span>(<span class="params"></span>)</span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line">f1() === <span class="built_in">window</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<ul>
+<li>然而，在严格模式下，this将保持他进入执行环境时的值，所以下面的this将会默认为<strong>undefined</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f2</span>(<span class="params"></span>)</span>&#123;</div><div class="line"><span class="meta">  "use strict"</span>; <span class="comment">// 这里是严格模式</span></div><div class="line">  <span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">&#125;</div><div class="line">f2() === <span class="literal">undefined</span>; <span class="comment">// true</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：在严格模式下，如果this未被执行的上下文环境定义，那么它将会默认为undefined。</p>
+</blockquote>
+<h5 id="2-对象方法中的this"><a href="#2-对象方法中的this" class="headerlink" title="2. 对象方法中的this"></a>2. 对象方法中的this</h5><ul>
+<li><p>当以对象里的方法的方式调用函数时，它们的 this 是调用该函数的对象.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">prop</span>: <span class="number">37</span>&#125;;</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">independent</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.prop;</div><div class="line">&#125;</div><div class="line">o.f = independent;</div><div class="line"><span class="built_in">console</span>.log(o.f()); <span class="comment">// logs 37</span></div><div class="line">  </div></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>注意，在何处或者如何定义调用函数完全不会影响到this的行为,this的值只与函数作为对象的成员被调用有关系</p>
+</blockquote>
+<h5 id="3-构造函数中的this"><a href="#3-构造函数中的this" class="headerlink" title="3. 构造函数中的this"></a>3. 构造函数中的this</h5><ul>
+<li>当一个函数被当做构造函数来调用的时候（首字母大写，与new一起使用），他的this与即将创建的<strong>新对象</strong>绑定。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">C2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.a = <span class="number">37</span>;</div><div class="line">&#125;</div><div class="line">o = <span class="keyword">new</span> C2();</div><div class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// logs 37</span></div></pre></td></tr></table></figure>
+<ul>
+<li>但是要小心下面的情况</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">C2</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">this</span>.a = <span class="number">37</span>;</div><div class="line">    <span class="keyword">return</span> &#123;<span class="attr">a</span>:<span class="number">38</span>&#125;;</div><div class="line">&#125;</div><div class="line">o = <span class="keyword">new</span> C2();</div><div class="line"><span class="built_in">console</span>.log(o.a); <span class="comment">// logs 38</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：当构造函数返回一个引用类型的时候，与this绑定的默认对象被取消，也就是说返回的值会覆盖原先的新对象</p>
+</blockquote>
+<h5 id="4-call和apply中的this"><a href="#4-call和apply中的this" class="headerlink" title="4. call和apply中的this"></a>4. call和apply中的this</h5><ul>
+<li>当一个函数的函数体内部使用了this，然后通过所有的函数都继承了Function对象的原型上的call()和apply()方法调用的时候可以改变this的指向为call和apply方法的第一个参数，如下：</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">   <span class="keyword">var</span> x = <span class="number">0</span>;</div><div class="line">   <span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params">y,z</span>)</span>&#123;</div><div class="line">       <span class="built_in">console</span>.log(<span class="keyword">this</span>.x + y + z);</div><div class="line">   &#125;</div><div class="line">   <span class="keyword">var</span> obj = &#123;</div><div class="line">       <span class="attr">x</span>:<span class="number">3</span></div><div class="line">   &#125;</div><div class="line">   test.call(obj,<span class="number">4</span>,<span class="number">5</span>)</div><div class="line"><span class="comment">//test.apply(obj,[4,5])</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>注意点：在使用call和apply的时候如果第一个参数传递的不是一个对象，那么JavaScript会在内部使用ToObject将其转换为对象，比如原始值是7的话，内部就会通过new Number(7)来把他转换为一个对象，如下：</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="built_in">Object</span>.prototype.toString.call(<span class="keyword">this</span>));</div><div class="line">&#125;</div><div class="line">bar.call(<span class="number">7</span>); <span class="comment">// [object Number]</span></div></pre></td></tr></table></figure>
+<h5 id="5-bind中的this"><a href="#5-bind中的this" class="headerlink" title="5. bind中的this"></a>5. bind中的this</h5><ul>
+<li>如果调用fn.bind(obj)方法的话会创建一个和fn有相同函数体和作用域的新函数，<strong>但是这个新函数的this被绑定为了第一个参数obj，而且不管他是怎么调用</strong></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.a;</div><div class="line">&#125;</div><div class="line"><span class="keyword">var</span> g = f.bind(&#123;<span class="attr">a</span>:<span class="string">"azerty"</span>&#125;);</div><div class="line"><span class="built_in">console</span>.log(g());<span class="comment">//azerty</span></div><div class="line"><span class="keyword">var</span> o = &#123;<span class="attr">a</span>:<span class="number">37</span>, <span class="attr">f</span>:f, <span class="attr">g</span>:g&#125;;</div><div class="line"><span class="built_in">console</span>.log(o.f(), o.g()); <span class="comment">//37 azerty</span></div></pre></td></tr></table></figure>
+<p><strong>扩充：实现bind</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">            <span class="built_in">Function</span>.prototype.bind = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">                <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line"><span class="comment">//    绑定时候传入的参数</span></div><div class="line">                <span class="keyword">var</span> argu = [].slice.call(<span class="built_in">arguments</span>);</div><div class="line"><span class="comment">//    需要固定已经传入的参数</span></div><div class="line">                <span class="keyword">var</span> param = argu.slice(<span class="number">1</span>)</div><div class="line"><span class="comment">//    返回的新函数</span></div><div class="line">                <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">                    that.apply(argu[<span class="number">0</span>],param.concat([].slice.call(<span class="built_in">arguments</span>)))</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">var</span> obj =&#123;</div><div class="line">                <span class="attr">name</span>:<span class="string">'ll'</span>,</div><div class="line">                <span class="attr">show</span>: <span class="function"><span class="keyword">function</span> (<span class="params">a,b,c,d,e,f</span>) </span>&#123;</div><div class="line">                    <span class="built_in">console</span>.log([a,b,c,d,e,f]);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">var</span> w = obj.show.bind(obj,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>);</div><div class="line">            w(<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>)</div></pre></td></tr></table></figure>
+<h5 id="6-DOM事件处理函数中的this"><a href="#6-DOM事件处理函数中的this" class="headerlink" title="6. DOM事件处理函数中的this"></a>6. DOM事件处理函数中的this</h5><ul>
+<li>当函数被用作事件处理函数时候，this指向的是触发事件的元素，在一些不是用addEventListener动态添加事件的浏览器中不遵守这个约定</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 被调用时，将关联的元素变成蓝色</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bluify</span>(<span class="params">e</span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === e.currentTarget); <span class="comment">// 总是 true</span></div><div class="line">    <span class="comment">// 当 currentTarget 和 target 是同一个对象是为 true</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span> === e.target);</div><div class="line">    <span class="keyword">this</span>.style.backgroundColor = <span class="string">'#A5D9F3'</span>;</div><div class="line">&#125;</div><div class="line"><span class="comment">// 获取文档中的所有元素的列表</span></div><div class="line"><span class="keyword">var</span> elements = <span class="built_in">document</span>.getElementsByTagName(<span class="string">'div'</span>);</div><div class="line"><span class="comment">// 将bluify作为元素的点击监听函数，当元素被点击时，就会变成蓝色</span></div><div class="line"><span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span> ; i&lt;elements.length ; i++)&#123;</div><div class="line">    elements[i].addEventListener(<span class="string">'click'</span>, bluify, <span class="literal">false</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h5 id="7-定时器中的this"><a href="#7-定时器中的this" class="headerlink" title="7. 定时器中的this"></a>7. 定时器中的this</h5><ul>
+<li>定时器中回调函数里面的this指向全局window</li>
+</ul>
+<h5 id="8-this的备份"><a href="#8-this的备份" class="headerlink" title="8. this的备份"></a>8. this的备份</h5><ul>
+<li>当使用多层this时候，为了访问正确的this我们需要对正确的this进行备份，以便后来使用</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">    <span class="attr">f1</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">var</span> f2 = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>);</div><div class="line">        &#125;();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">o.f1()</div><div class="line"><span class="comment">// Object</span></div><div class="line"><span class="comment">// Window</span></div></pre></td></tr></table></figure>
+<p>是不是和你想要的不太一样呢？你或许更想要下面这样的呢</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"> <span class="keyword">var</span> o = &#123;</div><div class="line">    <span class="attr">f1</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>);</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">var</span> f2 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(that);</div><div class="line">        &#125;();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">o.f1()</div><div class="line"><span class="comment">// Object</span></div><div class="line"><span class="comment">// Object</span></div></pre></td></tr></table></figure>
+<p>以上的代码中用变量that保存了函数外部的this，然后在函数内部使用that就不会发生this指向错乱的情况了</p>
+<ul>
+<li>数组的map和foreach方法，允许提供一个函数作为参数。这个函数内部的this指向的还是window</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">    <span class="attr">v</span>: <span class="string">'hello'</span>,</div><div class="line">    <span class="attr">p</span>: [ <span class="string">'a1'</span>, <span class="string">'a2'</span> ],</div><div class="line">    <span class="attr">f</span>: <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.p.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.v + <span class="string">' '</span> + item);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">o.f()</div><div class="line"><span class="comment">// undefined a1</span></div><div class="line"><span class="comment">// undefined a2</span></div></pre></td></tr></table></figure>
+<p>解决方案一：this的备份</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">    <span class="attr">v</span>: <span class="string">'hello'</span>,</div><div class="line">    <span class="attr">p</span>: [ <span class="string">'a1'</span>, <span class="string">'a2'</span> ],</div><div class="line">    <span class="attr">f</span>: <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">var</span> that = <span class="keyword">this</span>;</div><div class="line">        <span class="keyword">this</span>.p.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(that.v+<span class="string">' '</span>+item);</div><div class="line">        &#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">o.f()</div><div class="line"><span class="comment">// hello a1</span></div><div class="line"><span class="comment">// hello a2</span></div></pre></td></tr></table></figure>
+<p>解决方案二：将this当作foreach方法的第二个参数，固定它的运行环境。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> o = &#123;</div><div class="line">    <span class="attr">v</span>: <span class="string">'hello'</span>,</div><div class="line">    <span class="attr">p</span>: [ <span class="string">'a1'</span>, <span class="string">'a2'</span> ],</div><div class="line">    <span class="attr">f</span>: <span class="function"><span class="keyword">function</span> <span class="title">f</span>(<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">this</span>.p.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">item</span>) </span>&#123;</div><div class="line">            <span class="built_in">console</span>.log(<span class="keyword">this</span>.v + <span class="string">' '</span> + item);</div><div class="line">        &#125;, <span class="keyword">this</span>);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">o.f()</div><div class="line"><span class="comment">// hello a1</span></div><div class="line"><span class="comment">// hello a2</span></div></pre></td></tr></table></figure>
+<h5 id="9-Node中的this"><a href="#9-Node中的this" class="headerlink" title="9. Node中的this"></a>9. Node中的this</h5><ul>
+<li>在Node中，this的指向又分成两种情况。全局环境中，this指向全局对象global；模块环境中，this指向module.exports。</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;strong&gt;this是Javascript语言的一个关键字&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;使用场景&quot;&gt;&lt;a href=&quot;#使用场景&quot; class=&quot;headerlink&quot; title=&quot;使用场景&quot;&gt;&lt;/a&gt;使用场景&lt;/h2&gt;&lt;h3 id=&quot;注意点：&quot;&gt;&lt;a href=&quot;#注意点：&quot; class=&quot;headerlink&quot; title=&quot;注意点：&quot;&gt;&lt;/a&gt;注意点：&lt;/h3&gt;&lt;h3 id=&quot;在绝大多数情况下，函数的调用方式决定了this的值。&quot;&gt;&lt;a href=&quot;#在绝大多数情况下，函数的调用方式决定了this的值。&quot; class=&quot;headerlink&quot; title=&quot;在绝大多数情况下，函数的调用方式决定了this的值。&quot;&gt;&lt;/a&gt;在绝大多数情况下，函数的调用方式决定了this的值。&lt;/h3&gt;&lt;h3 id=&quot;this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同&quot;&gt;&lt;a href=&quot;#this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同&quot; class=&quot;headerlink&quot; title=&quot;this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同&quot;&gt;&lt;/a&gt;this不能在执行期间被赋值，在每次函数被调用时this的值也可能会不同&lt;/h3&gt;
+    
+    </summary>
+    
+    
+      <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
+    
+  </entry>
+  
+  <entry>
     <title>HTTP</title>
     <link href="http://lizhi.trade/2017/03/01/HTTP/"/>
     <id>http://lizhi.trade/2017/03/01/HTTP/</id>
@@ -159,7 +536,7 @@
     <link href="http://lizhi.trade/2017/02/21/JavaScript%E4%B8%AD%E5%AE%9E%E7%8E%B0%E7%BB%A7%E6%89%BF%E7%9A%84%E5%90%84%E7%A7%8D%E5%A7%BF%E5%8A%BF/"/>
     <id>http://lizhi.trade/2017/02/21/JavaScript中实现继承的各种姿势/</id>
     <published>2017-02-21T10:57:53.000Z</published>
-    <updated>2017-02-23T13:44:11.617Z</updated>
+    <updated>2017-05-06T10:47:33.288Z</updated>
     
     <content type="html"><![CDATA[<p>JavaScript 的继承是实现继承,而没有 Java 中的接口继承.这是因为JavaScript 中函数没有签名,而实现继承依靠的是原型链来实现的.</p>
 <h2 id="原型链继承"><a href="#原型链继承" class="headerlink" title="原型链继承"></a>原型链继承</h2><blockquote>
@@ -226,8 +603,6 @@
     
     </summary>
     
-      <category term="学习总结" scheme="http://lizhi.trade/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
-    
     
       <category term="JavaScript" scheme="http://lizhi.trade/tags/JavaScript/"/>
     
@@ -238,7 +613,7 @@
     <link href="http://lizhi.trade/2017/02/20/BFC%E5%B8%83%E5%B1%80-%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
     <id>http://lizhi.trade/2017/02/20/BFC布局-学习总结/</id>
     <published>2017-02-20T13:38:49.000Z</published>
-    <updated>2017-02-28T02:18:42.888Z</updated>
+    <updated>2017-05-06T10:47:13.274Z</updated>
     
     <content type="html"><![CDATA[<h2 id="一-w3c规范中的BFC定义："><a href="#一-w3c规范中的BFC定义：" class="headerlink" title="一. w3c规范中的BFC定义："></a>一. w3c规范中的BFC定义：</h2><p>“浮动元素和绝对定位元素，非块级盒子的块级容器（例如 inline-blocks, table-cells, 和 table-captions），以及overflow值不为“visiable”的块级盒子，都会为他们的内容创建新的BFC（块级格式上下文）。</p>
 <p>在BFC中，盒子从顶端开始垂直地一个接一个地排列，两个盒子之间的垂直的间隙是由他们的margin 值所决定的。在一个BFC中，两个相邻的块级盒子的垂直外边距会产生折叠。 在BFC中，每一个盒子的左外边缘（margin-left）会触碰到容器的左边缘(border-left)（对于从右到左的格式来说，则触碰到右边缘）。</p>
@@ -282,8 +657,6 @@
       &lt;h2 id=&quot;一-w3c规范中的BFC定义：&quot;&gt;&lt;a href=&quot;#一-w3c规范中的BFC定义：&quot; class=&quot;headerlink&quot; title=&quot;一. w3c规范中的BFC定义：&quot;&gt;&lt;/a&gt;一. w3c规范中的BFC定义：&lt;/h2&gt;&lt;p&gt;“浮动元素和绝对定位元素，非块级
     
     </summary>
-    
-      <category term="学习总结" scheme="http://lizhi.trade/categories/%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
     
     
       <category term="布局" scheme="http://lizhi.trade/tags/%E5%B8%83%E5%B1%80/"/>
